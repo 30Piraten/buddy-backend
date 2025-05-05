@@ -1,0 +1,56 @@
+name: backend
+
+on:
+  push:
+    paths:
+      - '**.go'
+      - '**.proto'
+      - '**.sql'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
+
+      - name: Install dependencies
+        run: |
+          go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
+          go install github.com/bufbuild/buf/cmd/buf@latest
+
+      - name: Go Build
+        run: |
+          go mod tidy
+          go build ./...
+
+      - name: Go Test
+        run: go test ./...
+
+  sqlc:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install sqlc
+        run: go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
+
+      - name: Run sqlc generate
+        run: sqlc generate
+
+  buf:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install buf
+        run: go install github.com/bufbuild/buf/cmd/buf@latest
+
+      - name: Buf Lint
+        run: buf lint
+
+      - name: Buf Generate
+        run: buf generate
