@@ -1,0 +1,13 @@
+version: v1
+managed:
+  enabled: false
+  
+plugins:
+- plugin: go 
+  out: gen/go
+  opt: 
+    - paths=source_relative
+- plugin: go-grpc
+  out: gen/go
+  opt:
+    - paths=source_relative
