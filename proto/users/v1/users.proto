@@ -1,0 +1,48 @@
+syntax = "proto3"; 
+
+package users.v1; 
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+option go_package = "github.com/30Piraten/buddy-backend/gen/go/proto/users/v1;usersv1";
+
+message User {
+  string id = 1;
+  string name = 2;
+  string email = 3;
+  google.protobuf.Timestamp created_at = 4;
+}
+
+service UserService {
+    rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
+    rpc GetUser(GetUserRequest) returns (GetUserResponse);
+    rpc ListUsers(google.protobuf.Empty) returns (ListUserResponse);
+}
+
+message CreateUserRequest {
+    string email = 1;
+    string handle = 2;
+    string name = 3;
+}
+
+message CreateUserResponse {
+    User user = 1;  
+}
+
+message GetUserRequest {
+    string id = 1; 
+}
+
+message GetUserResponse {
+    User user = 1;
+}
+
+// message ListUserRequest {
+//     int32 page = 1;
+//     int32 page_size = 2;
+// }
+
+message ListUserResponse {
+    repeated User users = 1;
+}
