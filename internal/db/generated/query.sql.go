@@ -3,12 +3,13 @@
 //   sqlc v1.29.0
 // source: query.sql
 
-package sqlc
+package generated
 
 import (
 	"context"
+	"time"
 
-	"github.com/jackc/pgx/v5/pgtype"
+	"github.com/google/uuid"
 )
 
 const createUser = `-- name: CreateUser :one
@@ -19,10 +20,10 @@ RETURNING id, name, email, created_at
 `
 
 type CreateUserParams struct {
-	ID        pgtype.UUID      `json:"id"`
-	Name      pgtype.Text      `json:"name"`
-	Email     pgtype.Text      `json:"email"`
-	CreatedAt pgtype.Timestamp `json:"created_at"`
+	ID        uuid.UUID `json:"id"`
+	Name      string    `json:"name"`
+	Email     string    `json:"email"`
+	CreatedAt time.Time `json:"created_at"`
 }
 
 func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, error) {
@@ -32,6 +33,22 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 		arg.Email,
 		arg.CreatedAt,
 	)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.Email,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
+const getUser = `-- name: GetUser :one
+SELECT id, name, email, created_at FROM users WHERE id = $1
+`
+
+func (q *Queries) GetUser(ctx context.Context, id uuid.UUID) (User, error) {
+	row := q.db.QueryRow(ctx, getUser, id)
 	var i User
 	err := row.Scan(
 		&i.ID,

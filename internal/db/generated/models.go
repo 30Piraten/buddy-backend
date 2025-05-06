@@ -2,49 +2,52 @@
 // versions:
 //   sqlc v1.29.0
 
-package sqlc
+package generated
 
 import (
+	"time"
+
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
 type Checkpoint struct {
-	ID         pgtype.UUID `json:"id"`
+	ID         uuid.UUID   `json:"id"`
 	RoadmapID  pgtype.UUID `json:"roadmap_id"`
 	Title      pgtype.Text `json:"title"`
 	OrderIndex pgtype.Int4 `json:"order_index"`
 }
 
 type Event struct {
-	ID        pgtype.UUID      `json:"id"`
-	UserID    pgtype.UUID      `json:"user_id"`
-	Type      pgtype.Text      `json:"type"`
-	Metadata  []byte           `json:"metadata"`
-	CreatedAt pgtype.Timestamp `json:"created_at"`
+	ID        uuid.UUID   `json:"id"`
+	UserID    pgtype.UUID `json:"user_id"`
+	Type      pgtype.Text `json:"type"`
+	Metadata  []byte      `json:"metadata"`
+	CreatedAt time.Time   `json:"created_at"`
 }
 
 type Roadmap struct {
-	ID          pgtype.UUID `json:"id"`
+	ID          uuid.UUID   `json:"id"`
 	Title       pgtype.Text `json:"title"`
 	Description pgtype.Text `json:"description"`
 }
 
 type User struct {
-	ID        pgtype.UUID      `json:"id"`
-	Name      pgtype.Text      `json:"name"`
-	Email     pgtype.Text      `json:"email"`
-	CreatedAt pgtype.Timestamp `json:"created_at"`
+	ID        uuid.UUID `json:"id"`
+	Name      string    `json:"name"`
+	Email     string    `json:"email"`
+	CreatedAt time.Time `json:"created_at"`
 }
 
 type UserCheckpoint struct {
-	ID           pgtype.UUID      `json:"id"`
+	ID           uuid.UUID        `json:"id"`
 	UserID       pgtype.UUID      `json:"user_id"`
 	CheckpointID pgtype.UUID      `json:"checkpoint_id"`
 	CompletedAt  pgtype.Timestamp `json:"completed_at"`
 }
 
 type UserRoadmap struct {
-	ID        pgtype.UUID      `json:"id"`
+	ID        uuid.UUID        `json:"id"`
 	UserID    pgtype.UUID      `json:"user_id"`
 	RoadmapID pgtype.UUID      `json:"roadmap_id"`
 	StartedAt pgtype.Timestamp `json:"started_at"`
