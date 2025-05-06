@@ -6,6 +6,21 @@ sql:
     gen:
       go:
         out: "internal/db/generated"
-        package: "sqlc"
+        package: "generated"
         sql_package: "pgx/v5"
         emit_json_tags: true
+        overrides:
+          - db_type: "uuid"
+            go_type: "github.com/google/uuid.UUID"
+          - column: "*.name"
+            go_type: "string"
+          - column: "*.email"
+            go_type: "string"
+          - column: "*.created_at"
+            go_type: "time.Time"
+          - db_type: "text"
+            go_type: "string"
+          - db_type: "timestamptz"
+            go_type: "time.Time"
+          - db_type: "timestamp"
+            go_type: "time.Time"
