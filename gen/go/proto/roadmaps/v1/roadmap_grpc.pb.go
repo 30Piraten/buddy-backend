@@ -19,7 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	RoadmapService_CreateRoadmap_FullMethodName = "/roadmaps.v1.RoadmapService/CreateRoadmap"
+	RoadmapService_CreateRoadmap_FullMethodName = "/proto.roadmaps.v1.RoadmapService/CreateRoadmap"
 )
 
 // RoadmapServiceClient is the client API for RoadmapService service.
@@ -108,7 +108,7 @@ func _RoadmapService_CreateRoadmap_Handler(srv interface{}, ctx context.Context,
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var RoadmapService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "roadmaps.v1.RoadmapService",
+	ServiceName: "proto.roadmaps.v1.RoadmapService",
 	HandlerType: (*RoadmapServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

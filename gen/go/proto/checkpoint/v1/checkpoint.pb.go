@@ -134,8 +134,8 @@ type Checkpoint struct {
 	Title         string                 `protobuf:"bytes,3,opt,name=title,proto3" json:"title,omitempty"`
 	Description   string                 `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`
 	Position      int32                  `protobuf:"varint,5,opt,name=position,proto3" json:"position,omitempty"`
-	Type          CheckpointType         `protobuf:"varint,6,opt,name=type,proto3,enum=checkpoints.v1.CheckpointType" json:"type,omitempty"`
-	Status        CheckpointStatus       `protobuf:"varint,7,opt,name=status,proto3,enum=checkpoints.v1.CheckpointStatus" json:"status,omitempty"`
+	Type          CheckpointType         `protobuf:"varint,6,opt,name=type,proto3,enum=proto.checkpoints.v1.CheckpointType" json:"type,omitempty"`
+	Status        CheckpointStatus       `protobuf:"varint,7,opt,name=status,proto3,enum=proto.checkpoints.v1.CheckpointStatus" json:"status,omitempty"`
 	EstimatedTime int32                  `protobuf:"varint,8,opt,name=estimated_time,json=estimatedTime,proto3" json:"estimated_time,omitempty"`
 	Reward        int32                  `protobuf:"varint,9,opt,name=reward,proto3" json:"reward,omitempty"`
 	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,10,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
@@ -249,8 +249,8 @@ type CheckpointRequest struct {
 	Title         string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
 	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
 	Position      int32                  `protobuf:"varint,4,opt,name=position,proto3" json:"position,omitempty"`
-	Type          CheckpointType         `protobuf:"varint,5,opt,name=type,proto3,enum=checkpoints.v1.CheckpointType" json:"type,omitempty"`
-	Status        CheckpointStatus       `protobuf:"varint,6,opt,name=status,proto3,enum=checkpoints.v1.CheckpointStatus" json:"status,omitempty"`
+	Type          CheckpointType         `protobuf:"varint,5,opt,name=type,proto3,enum=proto.checkpoints.v1.CheckpointType" json:"type,omitempty"`
+	Status        CheckpointStatus       `protobuf:"varint,6,opt,name=status,proto3,enum=proto.checkpoints.v1.CheckpointStatus" json:"status,omitempty"`
 	EstimatedTime int32                  `protobuf:"varint,7,opt,name=estimated_time,json=estimatedTime,proto3" json:"estimated_time,omitempty"`
 	RewardPoints  int32                  `protobuf:"varint,8,opt,name=reward_points,json=rewardPoints,proto3" json:"reward_points,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -391,7 +391,7 @@ var File_proto_checkpoint_v1_checkpoint_proto protoreflect.FileDescriptor
 
 const file_proto_checkpoint_v1_checkpoint_proto_rawDesc = "" +
 	"\n" +
-	"$proto/checkpoint/v1/checkpoint.proto\x12\x0echeckpoints.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\xf7\x02\n" +
+	"$proto/checkpoint/v1/checkpoint.proto\x12\x14proto.checkpoints.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\x83\x03\n" +
 	"\n" +
 	"Checkpoint\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1d\n" +
@@ -399,27 +399,27 @@ const file_proto_checkpoint_v1_checkpoint_proto_rawDesc = "" +
 	"roadmap_id\x18\x02 \x01(\tR\troadmapId\x12\x14\n" +
 	"\x05title\x18\x03 \x01(\tR\x05title\x12 \n" +
 	"\vdescription\x18\x04 \x01(\tR\vdescription\x12\x1a\n" +
-	"\bposition\x18\x05 \x01(\x05R\bposition\x122\n" +
-	"\x04type\x18\x06 \x01(\x0e2\x1e.checkpoints.v1.CheckpointTypeR\x04type\x128\n" +
-	"\x06status\x18\a \x01(\x0e2 .checkpoints.v1.CheckpointStatusR\x06status\x12%\n" +
+	"\bposition\x18\x05 \x01(\x05R\bposition\x128\n" +
+	"\x04type\x18\x06 \x01(\x0e2$.proto.checkpoints.v1.CheckpointTypeR\x04type\x12>\n" +
+	"\x06status\x18\a \x01(\x0e2&.proto.checkpoints.v1.CheckpointStatusR\x06status\x12%\n" +
 	"\x0eestimated_time\x18\b \x01(\x05R\restimatedTime\x12\x16\n" +
 	"\x06reward\x18\t \x01(\x05R\x06reward\x129\n" +
 	"\n" +
 	"created_at\x18\n" +
-	" \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\xc0\x02\n" +
+	" \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\xcc\x02\n" +
 	"\x11CheckpointRequest\x12\x1d\n" +
 	"\n" +
 	"roadmap_id\x18\x01 \x01(\tR\troadmapId\x12\x14\n" +
 	"\x05title\x18\x02 \x01(\tR\x05title\x12 \n" +
 	"\vdescription\x18\x03 \x01(\tR\vdescription\x12\x1a\n" +
-	"\bposition\x18\x04 \x01(\x05R\bposition\x122\n" +
-	"\x04type\x18\x05 \x01(\x0e2\x1e.checkpoints.v1.CheckpointTypeR\x04type\x128\n" +
-	"\x06status\x18\x06 \x01(\x0e2 .checkpoints.v1.CheckpointStatusR\x06status\x12%\n" +
+	"\bposition\x18\x04 \x01(\x05R\bposition\x128\n" +
+	"\x04type\x18\x05 \x01(\x0e2$.proto.checkpoints.v1.CheckpointTypeR\x04type\x12>\n" +
+	"\x06status\x18\x06 \x01(\x0e2&.proto.checkpoints.v1.CheckpointStatusR\x06status\x12%\n" +
 	"\x0eestimated_time\x18\a \x01(\x05R\restimatedTime\x12#\n" +
-	"\rreward_points\x18\b \x01(\x05R\frewardPoints\"P\n" +
-	"\x12CheckpointResponse\x12:\n" +
+	"\rreward_points\x18\b \x01(\x05R\frewardPoints\"V\n" +
+	"\x12CheckpointResponse\x12@\n" +
 	"\n" +
-	"checkpoint\x18\x01 \x01(\v2\x1a.checkpoints.v1.CheckpointR\n" +
+	"checkpoint\x18\x01 \x01(\v2 .proto.checkpoints.v1.CheckpointR\n" +
 	"checkpoint*a\n" +
 	"\x0eCheckpointType\x12\x14\n" +
 	"\x10TYPE_UNSPECIFIED\x10\x00\x12\x11\n" +
@@ -430,9 +430,9 @@ const file_proto_checkpoint_v1_checkpoint_proto_rawDesc = "" +
 	"\x12STATUS_UNSPECIFIED\x10\x00\x12\x12\n" +
 	"\x0eSTATUS_PENDING\x10\x01\x12\x16\n" +
 	"\x12STATUS_IN_PROGRESS\x10\x02\x12\x14\n" +
-	"\x10STATUS_COMPLETED\x10\x032n\n" +
-	"\x11CheckpointService\x12Y\n" +
-	"\x10CreateCheckpoint\x12!.checkpoints.v1.CheckpointRequest\x1a\".checkpoints.v1.CheckpointResponseBLZJgithub.com/30Piraten/buddy-backend/gen/go/proto/checkpoint/v1;checkpointv1b\x06proto3"
+	"\x10STATUS_COMPLETED\x10\x032z\n" +
+	"\x11CheckpointService\x12e\n" +
+	"\x10CreateCheckpoint\x12'.proto.checkpoints.v1.CheckpointRequest\x1a(.proto.checkpoints.v1.CheckpointResponseBLZJgithub.com/30Piraten/buddy-backend/gen/go/proto/checkpoint/v1;checkpointv1b\x06proto3"
 
 var (
 	file_proto_checkpoint_v1_checkpoint_proto_rawDescOnce sync.Once
@@ -449,22 +449,22 @@ func file_proto_checkpoint_v1_checkpoint_proto_rawDescGZIP() []byte {
 var file_proto_checkpoint_v1_checkpoint_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
 var file_proto_checkpoint_v1_checkpoint_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_proto_checkpoint_v1_checkpoint_proto_goTypes = []any{
-	(CheckpointType)(0),           // 0: checkpoints.v1.CheckpointType
-	(CheckpointStatus)(0),         // 1: checkpoints.v1.CheckpointStatus
-	(*Checkpoint)(nil),            // 2: checkpoints.v1.Checkpoint
-	(*CheckpointRequest)(nil),     // 3: checkpoints.v1.CheckpointRequest
-	(*CheckpointResponse)(nil),    // 4: checkpoints.v1.CheckpointResponse
+	(CheckpointType)(0),           // 0: proto.checkpoints.v1.CheckpointType
+	(CheckpointStatus)(0),         // 1: proto.checkpoints.v1.CheckpointStatus
+	(*Checkpoint)(nil),            // 2: proto.checkpoints.v1.Checkpoint
+	(*CheckpointRequest)(nil),     // 3: proto.checkpoints.v1.CheckpointRequest
+	(*CheckpointResponse)(nil),    // 4: proto.checkpoints.v1.CheckpointResponse
 	(*timestamppb.Timestamp)(nil), // 5: google.protobuf.Timestamp
 }
 var file_proto_checkpoint_v1_checkpoint_proto_depIdxs = []int32{
-	0, // 0: checkpoints.v1.Checkpoint.type:type_name -> checkpoints.v1.CheckpointType
-	1, // 1: checkpoints.v1.Checkpoint.status:type_name -> checkpoints.v1.CheckpointStatus
-	5, // 2: checkpoints.v1.Checkpoint.created_at:type_name -> google.protobuf.Timestamp
-	0, // 3: checkpoints.v1.CheckpointRequest.type:type_name -> checkpoints.v1.CheckpointType
-	1, // 4: checkpoints.v1.CheckpointRequest.status:type_name -> checkpoints.v1.CheckpointStatus
-	2, // 5: checkpoints.v1.CheckpointResponse.checkpoint:type_name -> checkpoints.v1.Checkpoint
-	3, // 6: checkpoints.v1.CheckpointService.CreateCheckpoint:input_type -> checkpoints.v1.CheckpointRequest
-	4, // 7: checkpoints.v1.CheckpointService.CreateCheckpoint:output_type -> checkpoints.v1.CheckpointResponse
+	0, // 0: proto.checkpoints.v1.Checkpoint.type:type_name -> proto.checkpoints.v1.CheckpointType
+	1, // 1: proto.checkpoints.v1.Checkpoint.status:type_name -> proto.checkpoints.v1.CheckpointStatus
+	5, // 2: proto.checkpoints.v1.Checkpoint.created_at:type_name -> google.protobuf.Timestamp
+	0, // 3: proto.checkpoints.v1.CheckpointRequest.type:type_name -> proto.checkpoints.v1.CheckpointType
+	1, // 4: proto.checkpoints.v1.CheckpointRequest.status:type_name -> proto.checkpoints.v1.CheckpointStatus
+	2, // 5: proto.checkpoints.v1.CheckpointResponse.checkpoint:type_name -> proto.checkpoints.v1.Checkpoint
+	3, // 6: proto.checkpoints.v1.CheckpointService.CreateCheckpoint:input_type -> proto.checkpoints.v1.CheckpointRequest
+	4, // 7: proto.checkpoints.v1.CheckpointService.CreateCheckpoint:output_type -> proto.checkpoints.v1.CheckpointResponse
 	7, // [7:8] is the sub-list for method output_type
 	6, // [6:7] is the sub-list for method input_type
 	6, // [6:6] is the sub-list for extension type_name

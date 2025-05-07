@@ -283,27 +283,27 @@ func (x *GetUserResponse) GetUser() *User {
 	return nil
 }
 
-type ListUserResponse struct {
+type ListUsersResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Users         []*User                `protobuf:"bytes,1,rep,name=users,proto3" json:"users,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ListUserResponse) Reset() {
-	*x = ListUserResponse{}
+func (x *ListUsersResponse) Reset() {
+	*x = ListUsersResponse{}
 	mi := &file_proto_users_v1_users_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ListUserResponse) String() string {
+func (x *ListUsersResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ListUserResponse) ProtoMessage() {}
+func (*ListUsersResponse) ProtoMessage() {}
 
-func (x *ListUserResponse) ProtoReflect() protoreflect.Message {
+func (x *ListUsersResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_proto_users_v1_users_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -315,12 +315,12 @@ func (x *ListUserResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ListUserResponse.ProtoReflect.Descriptor instead.
-func (*ListUserResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use ListUsersResponse.ProtoReflect.Descriptor instead.
+func (*ListUsersResponse) Descriptor() ([]byte, []int) {
 	return file_proto_users_v1_users_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *ListUserResponse) GetUsers() []*User {
+func (x *ListUsersResponse) GetUsers() []*User {
 	if x != nil {
 		return x.Users
 	}
@@ -331,7 +331,7 @@ var File_proto_users_v1_users_proto protoreflect.FileDescriptor
 
 const file_proto_users_v1_users_proto_rawDesc = "" +
 	"\n" +
-	"\x1aproto/users/v1/users.proto\x12\busers.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1bgoogle/protobuf/empty.proto\"{\n" +
+	"\x1aproto/users/v1/users.proto\x12\x0eproto.users.v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1bgoogle/protobuf/empty.proto\"{\n" +
 	"\x04User\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x14\n" +
@@ -341,20 +341,20 @@ const file_proto_users_v1_users_proto_rawDesc = "" +
 	"\x11CreateUserRequest\x12\x14\n" +
 	"\x05email\x18\x01 \x01(\tR\x05email\x12\x16\n" +
 	"\x06handle\x18\x02 \x01(\tR\x06handle\x12\x12\n" +
-	"\x04name\x18\x03 \x01(\tR\x04name\"8\n" +
-	"\x12CreateUserResponse\x12\"\n" +
-	"\x04user\x18\x01 \x01(\v2\x0e.users.v1.UserR\x04user\" \n" +
+	"\x04name\x18\x03 \x01(\tR\x04name\">\n" +
+	"\x12CreateUserResponse\x12(\n" +
+	"\x04user\x18\x01 \x01(\v2\x14.proto.users.v1.UserR\x04user\" \n" +
 	"\x0eGetUserRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\"5\n" +
-	"\x0fGetUserResponse\x12\"\n" +
-	"\x04user\x18\x01 \x01(\v2\x0e.users.v1.UserR\x04user\"8\n" +
-	"\x10ListUserResponse\x12$\n" +
-	"\x05users\x18\x01 \x03(\v2\x0e.users.v1.UserR\x05users2\xd7\x01\n" +
-	"\vUserService\x12G\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\";\n" +
+	"\x0fGetUserResponse\x12(\n" +
+	"\x04user\x18\x01 \x01(\v2\x14.proto.users.v1.UserR\x04user\"?\n" +
+	"\x11ListUsersResponse\x12*\n" +
+	"\x05users\x18\x01 \x03(\v2\x14.proto.users.v1.UserR\x05users2\xf6\x01\n" +
+	"\vUserService\x12S\n" +
 	"\n" +
-	"CreateUser\x12\x1b.users.v1.CreateUserRequest\x1a\x1c.users.v1.CreateUserResponse\x12>\n" +
-	"\aGetUser\x12\x18.users.v1.GetUserRequest\x1a\x19.users.v1.GetUserResponse\x12?\n" +
-	"\tListUsers\x12\x16.google.protobuf.Empty\x1a\x1a.users.v1.ListUserResponseBBZ@github.com/30Piraten/buddy-backend/gen/go/proto/users/v1;usersv1b\x06proto3"
+	"CreateUser\x12!.proto.users.v1.CreateUserRequest\x1a\".proto.users.v1.CreateUserResponse\x12J\n" +
+	"\aGetUser\x12\x1e.proto.users.v1.GetUserRequest\x1a\x1f.proto.users.v1.GetUserResponse\x12F\n" +
+	"\tListUsers\x12\x16.google.protobuf.Empty\x1a!.proto.users.v1.ListUsersResponseBBZ@github.com/30Piraten/buddy-backend/gen/go/proto/users/v1;usersv1b\x06proto3"
 
 var (
 	file_proto_users_v1_users_proto_rawDescOnce sync.Once
@@ -370,26 +370,26 @@ func file_proto_users_v1_users_proto_rawDescGZIP() []byte {
 
 var file_proto_users_v1_users_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_proto_users_v1_users_proto_goTypes = []any{
-	(*User)(nil),                  // 0: users.v1.User
-	(*CreateUserRequest)(nil),     // 1: users.v1.CreateUserRequest
-	(*CreateUserResponse)(nil),    // 2: users.v1.CreateUserResponse
-	(*GetUserRequest)(nil),        // 3: users.v1.GetUserRequest
-	(*GetUserResponse)(nil),       // 4: users.v1.GetUserResponse
-	(*ListUserResponse)(nil),      // 5: users.v1.ListUserResponse
+	(*User)(nil),                  // 0: proto.users.v1.User
+	(*CreateUserRequest)(nil),     // 1: proto.users.v1.CreateUserRequest
+	(*CreateUserResponse)(nil),    // 2: proto.users.v1.CreateUserResponse
+	(*GetUserRequest)(nil),        // 3: proto.users.v1.GetUserRequest
+	(*GetUserResponse)(nil),       // 4: proto.users.v1.GetUserResponse
+	(*ListUsersResponse)(nil),     // 5: proto.users.v1.ListUsersResponse
 	(*timestamppb.Timestamp)(nil), // 6: google.protobuf.Timestamp
 	(*emptypb.Empty)(nil),         // 7: google.protobuf.Empty
 }
 var file_proto_users_v1_users_proto_depIdxs = []int32{
-	6, // 0: users.v1.User.created_at:type_name -> google.protobuf.Timestamp
-	0, // 1: users.v1.CreateUserResponse.user:type_name -> users.v1.User
-	0, // 2: users.v1.GetUserResponse.user:type_name -> users.v1.User
-	0, // 3: users.v1.ListUserResponse.users:type_name -> users.v1.User
-	1, // 4: users.v1.UserService.CreateUser:input_type -> users.v1.CreateUserRequest
-	3, // 5: users.v1.UserService.GetUser:input_type -> users.v1.GetUserRequest
-	7, // 6: users.v1.UserService.ListUsers:input_type -> google.protobuf.Empty
-	2, // 7: users.v1.UserService.CreateUser:output_type -> users.v1.CreateUserResponse
-	4, // 8: users.v1.UserService.GetUser:output_type -> users.v1.GetUserResponse
-	5, // 9: users.v1.UserService.ListUsers:output_type -> users.v1.ListUserResponse
+	6, // 0: proto.users.v1.User.created_at:type_name -> google.protobuf.Timestamp
+	0, // 1: proto.users.v1.CreateUserResponse.user:type_name -> proto.users.v1.User
+	0, // 2: proto.users.v1.GetUserResponse.user:type_name -> proto.users.v1.User
+	0, // 3: proto.users.v1.ListUsersResponse.users:type_name -> proto.users.v1.User
+	1, // 4: proto.users.v1.UserService.CreateUser:input_type -> proto.users.v1.CreateUserRequest
+	3, // 5: proto.users.v1.UserService.GetUser:input_type -> proto.users.v1.GetUserRequest
+	7, // 6: proto.users.v1.UserService.ListUsers:input_type -> google.protobuf.Empty
+	2, // 7: proto.users.v1.UserService.CreateUser:output_type -> proto.users.v1.CreateUserResponse
+	4, // 8: proto.users.v1.UserService.GetUser:output_type -> proto.users.v1.GetUserResponse
+	5, // 9: proto.users.v1.UserService.ListUsers:output_type -> proto.users.v1.ListUsersResponse
 	7, // [7:10] is the sub-list for method output_type
 	4, // [4:7] is the sub-list for method input_type
 	4, // [4:4] is the sub-list for extension type_name

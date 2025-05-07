@@ -246,7 +246,7 @@ var File_proto_roadmaps_v1_roadmap_proto protoreflect.FileDescriptor
 
 const file_proto_roadmaps_v1_roadmap_proto_rawDesc = "" +
 	"\n" +
-	"\x1fproto/roadmaps/v1/roadmap.proto\x12\vroadmaps.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\x92\x02\n" +
+	"\x1fproto/roadmaps/v1/roadmap.proto\x12\x11proto.roadmaps.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\x92\x02\n" +
 	"\aRoadmap\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x19\n" +
 	"\bowner_id\x18\x02 \x01(\tR\aownerId\x12\x14\n" +
@@ -262,11 +262,11 @@ const file_proto_roadmaps_v1_roadmap_proto_rawDesc = "" +
 	"\bowner_id\x18\x02 \x01(\tR\aownerId\x12\x14\n" +
 	"\x05title\x18\x03 \x01(\tR\x05title\x12 \n" +
 	"\vdescription\x18\x04 \x01(\tR\vdescription\x12\x1b\n" +
-	"\tis_public\x18\x05 \x01(\bR\bisPublic\"G\n" +
-	"\x15CreateRoadmapResponse\x12.\n" +
-	"\aroadmap\x18\x01 \x01(\v2\x14.roadmaps.v1.RoadmapR\aroadmap2h\n" +
-	"\x0eRoadmapService\x12V\n" +
-	"\rCreateRoadmap\x12!.roadmaps.v1.CreateRoadmapRequest\x1a\".roadmaps.v1.CreateRoadmapResponseB9Z7github.com/30Piraten/proto/go/gen/roadmaps/v1;roadmapv1b\x06proto3"
+	"\tis_public\x18\x05 \x01(\bR\bisPublic\"M\n" +
+	"\x15CreateRoadmapResponse\x124\n" +
+	"\aroadmap\x18\x01 \x01(\v2\x1a.proto.roadmaps.v1.RoadmapR\aroadmap2t\n" +
+	"\x0eRoadmapService\x12b\n" +
+	"\rCreateRoadmap\x12'.proto.roadmaps.v1.CreateRoadmapRequest\x1a(.proto.roadmaps.v1.CreateRoadmapResponseB9Z7github.com/30Piraten/proto/go/gen/roadmaps/v1;roadmapv1b\x06proto3"
 
 var (
 	file_proto_roadmaps_v1_roadmap_proto_rawDescOnce sync.Once
@@ -282,16 +282,16 @@ func file_proto_roadmaps_v1_roadmap_proto_rawDescGZIP() []byte {
 
 var file_proto_roadmaps_v1_roadmap_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_proto_roadmaps_v1_roadmap_proto_goTypes = []any{
-	(*Roadmap)(nil),               // 0: roadmaps.v1.Roadmap
-	(*CreateRoadmapRequest)(nil),  // 1: roadmaps.v1.CreateRoadmapRequest
-	(*CreateRoadmapResponse)(nil), // 2: roadmaps.v1.CreateRoadmapResponse
+	(*Roadmap)(nil),               // 0: proto.roadmaps.v1.Roadmap
+	(*CreateRoadmapRequest)(nil),  // 1: proto.roadmaps.v1.CreateRoadmapRequest
+	(*CreateRoadmapResponse)(nil), // 2: proto.roadmaps.v1.CreateRoadmapResponse
 	(*timestamppb.Timestamp)(nil), // 3: google.protobuf.Timestamp
 }
 var file_proto_roadmaps_v1_roadmap_proto_depIdxs = []int32{
-	3, // 0: roadmaps.v1.Roadmap.created_at:type_name -> google.protobuf.Timestamp
-	0, // 1: roadmaps.v1.CreateRoadmapResponse.roadmap:type_name -> roadmaps.v1.Roadmap
-	1, // 2: roadmaps.v1.RoadmapService.CreateRoadmap:input_type -> roadmaps.v1.CreateRoadmapRequest
-	2, // 3: roadmaps.v1.RoadmapService.CreateRoadmap:output_type -> roadmaps.v1.CreateRoadmapResponse
+	3, // 0: proto.roadmaps.v1.Roadmap.created_at:type_name -> google.protobuf.Timestamp
+	0, // 1: proto.roadmaps.v1.CreateRoadmapResponse.roadmap:type_name -> proto.roadmaps.v1.Roadmap
+	1, // 2: proto.roadmaps.v1.RoadmapService.CreateRoadmap:input_type -> proto.roadmaps.v1.CreateRoadmapRequest
+	2, // 3: proto.roadmaps.v1.RoadmapService.CreateRoadmap:output_type -> proto.roadmaps.v1.CreateRoadmapResponse
 	3, // [3:4] is the sub-list for method output_type
 	2, // [2:3] is the sub-list for method input_type
 	2, // [2:2] is the sub-list for extension type_name

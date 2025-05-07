@@ -19,7 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	CheckpointService_CreateCheckpoint_FullMethodName = "/checkpoints.v1.CheckpointService/CreateCheckpoint"
+	CheckpointService_CreateCheckpoint_FullMethodName = "/proto.checkpoints.v1.CheckpointService/CreateCheckpoint"
 )
 
 // CheckpointServiceClient is the client API for CheckpointService service.
@@ -108,7 +108,7 @@ func _CheckpointService_CreateCheckpoint_Handler(srv interface{}, ctx context.Co
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var CheckpointService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "checkpoints.v1.CheckpointService",
+	ServiceName: "proto.checkpoints.v1.CheckpointService",
 	HandlerType: (*CheckpointServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
