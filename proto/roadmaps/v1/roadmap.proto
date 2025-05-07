@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package roadmaps.v1; 
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/30Piraten/proto/go/gen/roadmaps/v1;roadmapv1";
+
+service RoadmapService {
+    rpc CreateRoadmap(CreateRoadmapRequest) returns (CreateRoadmapResponse);
+}
+
+message Roadmap {
+    string id = 1;
+    string owner_id = 2; 
+    string text = 3;
+    string description = 4; 
+    bool is_public = 5;
+    string category = 6;
+    repeated string tags = 7;
+    string difficult = 8;
+    google.protobuf.Timestamp created_at = 9; 
+}
+
+message CreateRoadmapRequest {
+    string owner_id = 2; 
+    string title = 3;
+    string description = 4;
+    bool is_public = 5;
+}
+
+message CreateRoadmapResponse {
+    Roadmap roadmap = 1;
+}
