@@ -70,7 +70,7 @@ func (h *Handler) GetUser(ctx context.Context, req *usersv1.GetUserRequest) (*us
 
 }
 
-func (h *Handler) ListUsers(ctx context.Context, _ *emptypb.Empty) (*usersv1.ListUserResponse, error) {
+func (h *Handler) ListUsers(ctx context.Context, _ *emptypb.Empty) (*usersv1.ListUsersResponse, error) {
 	users, err := h.db.ListAllUsers(ctx)
 	if err != nil {
 		log.Printf("Error listing users: %v", err)
@@ -82,7 +82,7 @@ func (h *Handler) ListUsers(ctx context.Context, _ *emptypb.Empty) (*usersv1.Lis
 		protoUsers = append(protoUsers, convertToProto(user))
 	}
 
-	return &usersv1.ListUserResponse{
+	return &usersv1.ListUsersResponse{
 		Users: protoUsers,
 	}, nil
 }
