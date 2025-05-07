@@ -8,9 +8,15 @@ import (
 
 	"github.com/jackc/pgx/v5/pgxpool"
 
+	checkpointv1 "github.com/30Piraten/buddy-backend/gen/go/proto/checkpoint/v1"
+	roadmapv1 "github.com/30Piraten/buddy-backend/gen/go/proto/roadmaps/v1"
 	usersv1 "github.com/30Piraten/buddy-backend/gen/go/proto/users/v1"
-	"github.com/30Piraten/buddy-backend/internal/db/generated"
-	"github.com/30Piraten/buddy-backend/internal/users"
+	checkpointgen "github.com/30Piraten/buddy-backend/internal/db/checkpoints/checkpoint_generated"
+	roadmapgen "github.com/30Piraten/buddy-backend/internal/db/roadmaps/roadmap_generated"
+	usergen "github.com/30Piraten/buddy-backend/internal/db/users/user_generated"
+	"github.com/30Piraten/buddy-backend/internal/handlers/checkpoint"
+	"github.com/30Piraten/buddy-backend/internal/handlers/roadmap"
+	"github.com/30Piraten/buddy-backend/internal/handlers/users"
 	"github.com/joho/godotenv"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -80,8 +86,21 @@ func main() {
 	}
 	log.Info().Msg("Successfully hitchhiked to the database")
 
-	queries := generated.New(db)
-	handler := users.NewHandler(queries)
+	//
+
+	// Users
+	userQueries := usergen.New(db)
+	userHandler := users.NewHandler(userQueries)
+
+	// Roadmaps
+	roadmapQueries := roadmapgen.New(db)
+	roadmapHandler := roadmap.NewRoadmapHandler(roadmapQueries)
+
+	// Checkpoint
+	checkpointQueries := checkpointgen.New(db)
+	checkpointHandler := checkpoint.NewCheckpointHandler(checkpointQueries)
+
+	//
 
 	port := getEnv("PORT", "9090")
 	listener, err := net.Listen("tcp", ":"+port)
@@ -89,8 +108,19 @@ func main() {
 		log.Info().Str("Error", "Failed to connect to port: "+err.Error())
 	}
 
+	//
+
+	// Users
 	server := grpc.NewServer()
-	usersv1.RegisterUserServiceServer(server, handler)
+	usersv1.RegisterUserServiceServer(server, userHandler)
+
+	// Roadmap
+	roadmapv1.RegisterRoadmapServiceServer(server, roadmapHandler)
+
+	// Checkpoint
+	checkpointv1.RegisterCheckpointServiceServer(server, checkpointHandler)
+
+	//
 
 	// Register reflection service on gRPC server
 	reflection.Register(server)
