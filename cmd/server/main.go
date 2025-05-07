@@ -8,7 +8,7 @@ import (
 
 	"github.com/jackc/pgx/v5/pgxpool"
 
-	checkpointv1 "github.com/30Piraten/buddy-backend/gen/go/proto/checkpoint/v1"
+	checkpointv1 "github.com/30Piraten/buddy-backend/gen/go/proto/checkpoints/v1"
 	roadmapv1 "github.com/30Piraten/buddy-backend/gen/go/proto/roadmaps/v1"
 	usersv1 "github.com/30Piraten/buddy-backend/gen/go/proto/users/v1"
 	checkpointgen "github.com/30Piraten/buddy-backend/internal/db/checkpoints/checkpoint_generated"
