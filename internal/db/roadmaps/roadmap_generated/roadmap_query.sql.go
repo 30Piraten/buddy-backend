@@ -9,7 +9,6 @@ import (
 	"context"
 
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const createRoadmap = `-- name: CreateRoadmap :one
@@ -19,10 +18,10 @@ RETURNING id, owner_id, title, description, is_public, category, tags, difficult
 `
 
 type CreateRoadmapParams struct {
-	OwnerID     pgtype.UUID `json:"owner_id"`
-	Title       string      `json:"title"`
-	Description pgtype.Text `json:"description"`
-	IsPublic    pgtype.Bool `json:"is_public"`
+	OwnerID     uuid.UUID `json:"owner_id"`
+	Title       string    `json:"title"`
+	Description string    `json:"description"`
+	IsPublic    bool      `json:"is_public"`
 }
 
 func (q *Queries) CreateRoadmap(ctx context.Context, arg CreateRoadmapParams) (Roadmap, error) {
@@ -72,7 +71,7 @@ const listUserRoadmaps = `-- name: ListUserRoadmaps :many
 SELECT id, owner_id, title, description, is_public, category, tags, difficult, created_at FROM roadmaps WHERE owner_id = $1 ORDER BY created_at DESC
 `
 
-func (q *Queries) ListUserRoadmaps(ctx context.Context, ownerID pgtype.UUID) ([]Roadmap, error) {
+func (q *Queries) ListUserRoadmaps(ctx context.Context, ownerID uuid.UUID) ([]Roadmap, error) {
 	rows, err := q.db.Query(ctx, listUserRoadmaps, ownerID)
 	if err != nil {
 		return nil, err

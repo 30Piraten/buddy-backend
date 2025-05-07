@@ -13,10 +13,10 @@ import (
 
 type Roadmap struct {
 	ID          uuid.UUID   `json:"id"`
-	OwnerID     pgtype.UUID `json:"owner_id"`
+	OwnerID     uuid.UUID   `json:"owner_id"`
 	Title       string      `json:"title"`
-	Description pgtype.Text `json:"description"`
-	IsPublic    pgtype.Bool `json:"is_public"`
+	Description string      `json:"description"`
+	IsPublic    bool        `json:"is_public"`
 	Category    pgtype.Text `json:"category"`
 	Tags        []string    `json:"tags"`
 	Difficult   pgtype.Text `json:"difficult"`

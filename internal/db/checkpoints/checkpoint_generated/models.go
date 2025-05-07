@@ -13,13 +13,13 @@ import (
 
 type Checkpoint struct {
 	ID            uuid.UUID   `json:"id"`
-	RoadmapID     pgtype.UUID `json:"roadmap_id"`
+	RoadmapID     uuid.UUID   `json:"roadmap_id"`
 	Title         string      `json:"title"`
-	Description   pgtype.Text `json:"description"`
+	Description   string      `json:"description"`
 	Position      int32       `json:"position"`
 	Type          string      `json:"type"`
-	Status        pgtype.Text `json:"status"`
-	EstimatedTime pgtype.Int4 `json:"estimated_time"`
+	Status        string      `json:"status"`
+	EstimatedTime int32       `json:"estimated_time"`
 	RewardPoints  pgtype.Int4 `json:"reward_points"`
 	CreatedAt     time.Time   `json:"created_at"`
 }

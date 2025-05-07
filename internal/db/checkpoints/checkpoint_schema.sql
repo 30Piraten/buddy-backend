@@ -1,6 +1,6 @@
 CREATE TABLE checkpoints (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  roadmap_id UUID REFERENCES roadmaps(id) ON DELETE CASCADE,
+  roadmap_id UUID NOT NULL,
   title TEXT NOT NULL,
   description TEXT,
   position INT NOT NULL,

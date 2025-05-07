@@ -9,21 +9,21 @@ import (
 	"context"
 
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const createCheckpoint = `-- name: CreateCheckpoint :one
-INSERT INTO checkpoints (roadmap_id, title, description, position, status)
-VALUES ($1, $2, $3, $4, $5)
+INSERT INTO checkpoints (roadmap_id, title, description, position, status, estimated_time)
+VALUES ($1, $2, $3, $4, $5, $6)
 RETURNING id, roadmap_id, title, description, position, type, status, estimated_time, reward_points, created_at
 `
 
 type CreateCheckpointParams struct {
-	RoadmapID   pgtype.UUID `json:"roadmap_id"`
-	Title       string      `json:"title"`
-	Description pgtype.Text `json:"description"`
-	Position    int32       `json:"position"`
-	Status      pgtype.Text `json:"status"`
+	RoadmapID     uuid.UUID `json:"roadmap_id"`
+	Title         string    `json:"title"`
+	Description   string    `json:"description"`
+	Position      int32     `json:"position"`
+	Status        string    `json:"status"`
+	EstimatedTime int32     `json:"estimated_time"`
 }
 
 func (q *Queries) CreateCheckpoint(ctx context.Context, arg CreateCheckpointParams) (Checkpoint, error) {
@@ -33,6 +33,7 @@ func (q *Queries) CreateCheckpoint(ctx context.Context, arg CreateCheckpointPara
 		arg.Description,
 		arg.Position,
 		arg.Status,
+		arg.EstimatedTime,
 	)
 	var i Checkpoint
 	err := row.Scan(
@@ -76,7 +77,7 @@ const listCheckpoints = `-- name: ListCheckpoints :many
 SELECT id, roadmap_id, title, description, position, type, status, estimated_time, reward_points, created_at FROM checkpoints WHERE roadmap_id = $1 ORDER BY position ASC
 `
 
-func (q *Queries) ListCheckpoints(ctx context.Context, roadmapID pgtype.UUID) ([]Checkpoint, error) {
+func (q *Queries) ListCheckpoints(ctx context.Context, roadmapID uuid.UUID) ([]Checkpoint, error) {
 	rows, err := q.db.Query(ctx, listCheckpoints, roadmapID)
 	if err != nil {
 		return nil, err
