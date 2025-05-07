@@ -53,10 +53,15 @@ jobs:
         with:
           go-version: '1.24'
 
+      - name: Set up Go PATH
+        run: |
+          echo "/usr/local/bin" >> $GITHUB_PATH
+          export PATH="/usr/local/bin:$PATH"
+
       - name: Go build
         run: |
           go mod tidy
-          go build ./..
+          go build ./...
 
   test:
     needs: build
