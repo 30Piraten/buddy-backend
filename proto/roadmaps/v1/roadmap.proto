@@ -13,7 +13,7 @@ service RoadmapService {
 message Roadmap {
     string id = 1;
     string owner_id = 2; 
-    string text = 3;
+    string title = 3;
     string description = 4; 
     bool is_public = 5;
     string category = 6;
