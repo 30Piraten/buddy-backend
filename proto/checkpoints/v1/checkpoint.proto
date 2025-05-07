@@ -4,25 +4,25 @@ package proto.checkpoints.v1;
 
 import "google/protobuf/timestamp.proto";
 
-option go_package = "github.com/30Piraten/buddy-backend/gen/go/proto/checkpoint/v1;checkpointv1";
+option go_package = "github.com/30Piraten/buddy-backend/gen/go/proto/checkpoints/v1;checkpointv1";
 
 service CheckpointService {
-    rpc CreateCheckpoint(CheckpointRequest) returns (CheckpointResponse);
+    rpc CreateCheckpoint(CreateCheckpointRequest) returns (CreateCheckpointResponse);
 }
 
 // Define enum types separately
 enum CheckpointType {
-    TYPE_UNSPECIFIED = 0;
-    TYPE_LEARNING = 1;
-    TYPE_PRACTICE = 2;
-    TYPE_ASSESSMENT = 3;
+    CHECKPOINT_TYPE_TYPE_UNSPECIFIED = 0;
+    CHECKPOINT_TYPE_TYPE_LEARNING = 1;
+    CHECKPOINT_TYPE_TYPE_PRACTICE = 2;
+    CHECKPOINT_TYPE_TYPE_ASSESSMENT = 3;
 }
 
 enum CheckpointStatus {
-    STATUS_UNSPECIFIED = 0;
-    STATUS_PENDING = 1;
-    STATUS_IN_PROGRESS = 2;
-    STATUS_COMPLETED = 3;
+    CHECKPOINT_STATUS_STATUS_UNSPECIFIED = 0;
+    CHECKPOINT_STATUS_STATUS_PENDING = 1;
+    CHECKPOINT_STATUS_STATUS_IN_PROGRESS = 2;
+    CHECKPOINT_STATUS_STATUS_COMPLETED = 3;
 }
 
 message Checkpoint {
@@ -38,7 +38,7 @@ message Checkpoint {
     google.protobuf.Timestamp created_at = 10;
 }
 
-message CheckpointRequest {
+message CreateCheckpointRequest {
     string roadmap_id = 1; 
     string title = 2; 
     string description = 3; 
@@ -49,6 +49,6 @@ message CheckpointRequest {
     int32 reward_points = 8;
 }
 
-message CheckpointResponse {
+message CreateCheckpointResponse {
     Checkpoint checkpoint = 1; 
 }
