@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package checkpoints.v1;
+package proto.checkpoints.v1;
 
 import "google/protobuf/timestamp.proto";
 

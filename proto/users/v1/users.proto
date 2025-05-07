@@ -1,6 +1,6 @@
 syntax = "proto3"; 
 
-package users.v1; 
+package proto.users.v1; 
 
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/empty.proto";
@@ -17,7 +17,7 @@ message User {
 service UserService {
     rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
     rpc GetUser(GetUserRequest) returns (GetUserResponse);
-    rpc ListUsers(google.protobuf.Empty) returns (ListUserResponse);
+    rpc ListUsers(google.protobuf.Empty) returns (ListUsersResponse);
 }
 
 message CreateUserRequest {
@@ -43,6 +43,6 @@ message GetUserResponse {
 //     int32 page_size = 2;
 // }
 
-message ListUserResponse {
+message ListUsersResponse {
     repeated User users = 1;
 }
