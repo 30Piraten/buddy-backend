@@ -6,7 +6,7 @@ breaking:
   
 lint:
   use:
-    - DEFAULT
+    - STANDARD
   allow_comment_ignores: true
   enum_zero_value_suffix: _UNSPECIFIED
   rpc_allow_google_protobuf_empty_requests: true
