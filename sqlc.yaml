@@ -1,12 +1,13 @@
 version: "2"
 sql:
+  # Users module
   - engine: "postgresql"
-    schema: "internal/db/schema.sql"
-    queries: "internal/db/query.sql"
+    schema: "internal/db/users/user_schema.sql"
+    queries: "internal/db/users/user_query.sql"
     gen:
       go:
-        out: "internal/db/generated"
-        package: "generated"
+        out: "internal/db/users/user_generated"
+        package: "usergen"
         sql_package: "pgx/v5"
         emit_json_tags: true
         overrides:
@@ -23,4 +24,36 @@ sql:
           - db_type: "timestamptz"
             go_type: "time.Time"
           - db_type: "timestamp"
+            go_type: "time.Time"
+
+  # Roadmap module
+  - engine: "postgresql"
+    schema: "internal/db/roadmaps/roadmap_schema.sql"
+    queries: "internal/db/roadmaps/roadmap_query.sql"
+    gen:
+      go:
+        out: "internal/db/roadmaps/roadmap_generated"
+        package: "roadmapgen"
+        sql_package: "pgx/v5"
+        emit_json_tags: true
+        overrides:
+          - db_type: "uuid"
+            go_type: "github.com/google/uuid.UUID"
+          - column: "*.created_at"
+            go_type: "time.Time"
+
+  # Checkpoint module
+  - engine: "postgresql"
+    schema: "internal/db/checkpoints/checkpoint_schema.sql" 
+    queries: "internal/db/checkpoints/checkpoint_query.sql"
+    gen:
+      go:
+        out: "internal/db/checkpoints/checkpoint_generated"
+        package: "checkpointgen"
+        sql_package: "pgx/v5"
+        emit_json_tags: true
+        overrides:
+          - db_type: "uuid"
+            go_type: "github.com/google/uuid.UUID"
+          - column: "*.created_at"
             go_type: "time.Time"
