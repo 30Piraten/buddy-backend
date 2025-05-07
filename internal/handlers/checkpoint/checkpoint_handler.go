@@ -3,7 +3,7 @@ package checkpoint
 import (
 	"context"
 
-	checkpointv1 "github.com/30Piraten/buddy-backend/gen/go/proto/checkpoint/v1"
+	checkpointv1 "github.com/30Piraten/buddy-backend/gen/go/proto/checkpoints/v1"
 	checkpointgen "github.com/30Piraten/buddy-backend/internal/db/checkpoints/checkpoint_generated"
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
@@ -21,7 +21,7 @@ func NewCheckpointHandler(ch *checkpointgen.Queries) *CheckpointHandler {
 	return &CheckpointHandler{db: ch}
 }
 
-func (h *CheckpointHandler) CreateCheckpoint(ctx context.Context, req *checkpointv1.CheckpointRequest) (*checkpointv1.CheckpointResponse, error) {
+func (h *CheckpointHandler) CreateCheckpoint(ctx context.Context, req *checkpointv1.CreateCheckpointRequest) (*checkpointv1.CreateCheckpointResponse, error) {
 	roadmapID, err := uuid.Parse(req.RoadmapId)
 	if err != nil {
 		return nil, status.Errorf(codes.InvalidArgument, "invalid roadmap_id: %v", err)
@@ -40,7 +40,7 @@ func (h *CheckpointHandler) CreateCheckpoint(ctx context.Context, req *checkpoin
 		return nil, status.Errorf(codes.Internal, "failed to create checkpoint: %v", err)
 	}
 
-	return &checkpointv1.CheckpointResponse{
+	return &checkpointv1.CreateCheckpointResponse{
 		Checkpoint: toProtoCheckpoint(c),
 	}, nil
 }
