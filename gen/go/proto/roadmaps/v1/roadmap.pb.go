@@ -26,7 +26,7 @@ type Roadmap struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	OwnerId       string                 `protobuf:"bytes,2,opt,name=owner_id,json=ownerId,proto3" json:"owner_id,omitempty"`
-	Text          string                 `protobuf:"bytes,3,opt,name=text,proto3" json:"text,omitempty"`
+	Title         string                 `protobuf:"bytes,3,opt,name=title,proto3" json:"title,omitempty"`
 	Description   string                 `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`
 	IsPublic      bool                   `protobuf:"varint,5,opt,name=is_public,json=isPublic,proto3" json:"is_public,omitempty"`
 	Category      string                 `protobuf:"bytes,6,opt,name=category,proto3" json:"category,omitempty"`
@@ -81,9 +81,9 @@ func (x *Roadmap) GetOwnerId() string {
 	return ""
 }
 
-func (x *Roadmap) GetText() string {
+func (x *Roadmap) GetTitle() string {
 	if x != nil {
-		return x.Text
+		return x.Title
 	}
 	return ""
 }
@@ -246,11 +246,11 @@ var File_proto_roadmaps_v1_roadmap_proto protoreflect.FileDescriptor
 
 const file_proto_roadmaps_v1_roadmap_proto_rawDesc = "" +
 	"\n" +
-	"\x1fproto/roadmaps/v1/roadmap.proto\x12\vroadmaps.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\x90\x02\n" +
+	"\x1fproto/roadmaps/v1/roadmap.proto\x12\vroadmaps.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\x92\x02\n" +
 	"\aRoadmap\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x19\n" +
-	"\bowner_id\x18\x02 \x01(\tR\aownerId\x12\x12\n" +
-	"\x04text\x18\x03 \x01(\tR\x04text\x12 \n" +
+	"\bowner_id\x18\x02 \x01(\tR\aownerId\x12\x14\n" +
+	"\x05title\x18\x03 \x01(\tR\x05title\x12 \n" +
 	"\vdescription\x18\x04 \x01(\tR\vdescription\x12\x1b\n" +
 	"\tis_public\x18\x05 \x01(\bR\bisPublic\x12\x1a\n" +
 	"\bcategory\x18\x06 \x01(\tR\bcategory\x12\x12\n" +
