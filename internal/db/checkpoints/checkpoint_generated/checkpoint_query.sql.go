@@ -12,8 +12,8 @@ import (
 )
 
 const createCheckpoint = `-- name: CreateCheckpoint :one
-INSERT INTO checkpoints (roadmap_id, title, description, position, status, estimated_time)
-VALUES ($1, $2, $3, $4, $5, $6)
+INSERT INTO checkpoints (roadmap_id, title, description, position, type, status, estimated_time, reward_points, created_at)
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW())
 RETURNING id, roadmap_id, title, description, position, type, status, estimated_time, reward_points, created_at
 `
 
@@ -22,8 +22,10 @@ type CreateCheckpointParams struct {
 	Title         string    `json:"title"`
 	Description   string    `json:"description"`
 	Position      int32     `json:"position"`
+	Type          string    `json:"type"`
 	Status        string    `json:"status"`
 	EstimatedTime int32     `json:"estimated_time"`
+	RewardPoints  int32     `json:"reward_points"`
 }
 
 func (q *Queries) CreateCheckpoint(ctx context.Context, arg CreateCheckpointParams) (Checkpoint, error) {
@@ -32,9 +34,35 @@ func (q *Queries) CreateCheckpoint(ctx context.Context, arg CreateCheckpointPara
 		arg.Title,
 		arg.Description,
 		arg.Position,
+		arg.Type,
 		arg.Status,
 		arg.EstimatedTime,
+		arg.RewardPoints,
 	)
+	var i Checkpoint
+	err := row.Scan(
+		&i.ID,
+		&i.RoadmapID,
+		&i.Title,
+		&i.Description,
+		&i.Position,
+		&i.Type,
+		&i.Status,
+		&i.EstimatedTime,
+		&i.RewardPoints,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
+const deleteCheckpoint = `-- name: DeleteCheckpoint :one
+DELETE FROM checkpoints
+WHERE id = $1 
+RETURNING id, roadmap_id, title, description, position, type, status, estimated_time, reward_points, created_at
+`
+
+func (q *Queries) DeleteCheckpoint(ctx context.Context, id uuid.UUID) (Checkpoint, error) {
+	row := q.db.QueryRow(ctx, deleteCheckpoint, id)
 	var i Checkpoint
 	err := row.Scan(
 		&i.ID,
@@ -106,4 +134,103 @@ func (q *Queries) ListCheckpoints(ctx context.Context, roadmapID uuid.UUID) ([]C
 		return nil, err
 	}
 	return items, nil
+}
+
+const listUserCheckpoints = `-- name: ListUserCheckpoints :many
+SELECT c.id, c.roadmap_id, c.title, c.description, c.position, c.type, c.status, c.estimated_time, c.reward_points, c.created_at
+FROM checkpoints c
+JOIN user_checkpoints uc ON c.id = uc.checkpoint_id 
+WHERE uc.user_id = $1
+    AND ($2::text IS NULL OR c.roadmap_id = $2)
+    AND ($3::text IS NULL OR c.status = $3)
+ORDER BY c.position ASC
+`
+
+type ListUserCheckpointsParams struct {
+	UserID  uuid.UUID `json:"user_id"`
+	Column2 string    `json:"column_2"`
+	Column3 string    `json:"column_3"`
+}
+
+func (q *Queries) ListUserCheckpoints(ctx context.Context, arg ListUserCheckpointsParams) ([]Checkpoint, error) {
+	rows, err := q.db.Query(ctx, listUserCheckpoints, arg.UserID, arg.Column2, arg.Column3)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Checkpoint
+	for rows.Next() {
+		var i Checkpoint
+		if err := rows.Scan(
+			&i.ID,
+			&i.RoadmapID,
+			&i.Title,
+			&i.Description,
+			&i.Position,
+			&i.Type,
+			&i.Status,
+			&i.EstimatedTime,
+			&i.RewardPoints,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const updateCheckpoint = `-- name: UpdateCheckpoint :one
+UPDATE checkpoints
+SET 
+    title = $2,
+    description = $3,
+    position = $4,
+    type = $5,
+    status = $6,
+    estimated_time = $7,
+    reward_points = $8
+WHERE id = $1
+RETURNING id, roadmap_id, title, description, position, type, status, estimated_time, reward_points, created_at
+`
+
+type UpdateCheckpointParams struct {
+	ID            uuid.UUID `json:"id"`
+	Title         string    `json:"title"`
+	Description   string    `json:"description"`
+	Position      int32     `json:"position"`
+	Type          string    `json:"type"`
+	Status        string    `json:"status"`
+	EstimatedTime int32     `json:"estimated_time"`
+	RewardPoints  int32     `json:"reward_points"`
+}
+
+func (q *Queries) UpdateCheckpoint(ctx context.Context, arg UpdateCheckpointParams) (Checkpoint, error) {
+	row := q.db.QueryRow(ctx, updateCheckpoint,
+		arg.ID,
+		arg.Title,
+		arg.Description,
+		arg.Position,
+		arg.Type,
+		arg.Status,
+		arg.EstimatedTime,
+		arg.RewardPoints,
+	)
+	var i Checkpoint
+	err := row.Scan(
+		&i.ID,
+		&i.RoadmapID,
+		&i.Title,
+		&i.Description,
+		&i.Position,
+		&i.Type,
+		&i.Status,
+		&i.EstimatedTime,
+		&i.RewardPoints,
+		&i.CreatedAt,
+	)
+	return i, err
 }

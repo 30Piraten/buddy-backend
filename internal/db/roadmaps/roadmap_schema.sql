@@ -7,6 +7,6 @@ CREATE TABLE roadmaps (
   is_public BOOLEAN DEFAULT FALSE,
   category TEXT,
   tags TEXT[],
-  difficult TEXT,
+  difficulty TEXT,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

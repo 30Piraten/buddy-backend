@@ -8,17 +8,16 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5/pgtype"
 )
 
 type Roadmap struct {
-	ID          uuid.UUID   `json:"id"`
-	OwnerID     uuid.UUID   `json:"owner_id"`
-	Title       string      `json:"title"`
-	Description string      `json:"description"`
-	IsPublic    bool        `json:"is_public"`
-	Category    pgtype.Text `json:"category"`
-	Tags        []string    `json:"tags"`
-	Difficult   pgtype.Text `json:"difficult"`
-	CreatedAt   time.Time   `json:"created_at"`
+	ID          uuid.UUID `json:"id"`
+	OwnerID     uuid.UUID `json:"owner_id"`
+	Title       string    `json:"title"`
+	Description string    `json:"description"`
+	IsPublic    bool      `json:"is_public"`
+	Category    string    `json:"category"`
+	Tags        []string  `json:"tags"`
+	Difficulty  string    `json:"difficulty"`
+	CreatedAt   time.Time `json:"created_at"`
 }

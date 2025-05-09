@@ -14,7 +14,7 @@ import (
 const createRoadmap = `-- name: CreateRoadmap :one
 INSERT INTO roadmaps (owner_id, title, description, is_public)
 VALUES ($1, $2, $3, $4)
-RETURNING id, owner_id, title, description, is_public, category, tags, difficult, created_at
+RETURNING id, owner_id, title, description, is_public, category, tags, difficulty, created_at
 `
 
 type CreateRoadmapParams struct {
@@ -40,18 +40,20 @@ func (q *Queries) CreateRoadmap(ctx context.Context, arg CreateRoadmapParams) (R
 		&i.IsPublic,
 		&i.Category,
 		&i.Tags,
-		&i.Difficult,
+		&i.Difficulty,
 		&i.CreatedAt,
 	)
 	return i, err
 }
 
-const getRoadmap = `-- name: GetRoadmap :one
-SELECT id, owner_id, title, description, is_public, category, tags, difficult, created_at FROM roadmaps WHERE id = $1
+const deleteRoadmap = `-- name: DeleteRoadmap :one
+DELETE FROM roadmaps 
+WHERE id = $1
+RETURNING id, owner_id, title, description, is_public, category, tags, difficulty, created_at
 `
 
-func (q *Queries) GetRoadmap(ctx context.Context, id uuid.UUID) (Roadmap, error) {
-	row := q.db.QueryRow(ctx, getRoadmap, id)
+func (q *Queries) DeleteRoadmap(ctx context.Context, id uuid.UUID) (Roadmap, error) {
+	row := q.db.QueryRow(ctx, deleteRoadmap, id)
 	var i Roadmap
 	err := row.Scan(
 		&i.ID,
@@ -61,18 +63,39 @@ func (q *Queries) GetRoadmap(ctx context.Context, id uuid.UUID) (Roadmap, error)
 		&i.IsPublic,
 		&i.Category,
 		&i.Tags,
-		&i.Difficult,
+		&i.Difficulty,
 		&i.CreatedAt,
 	)
 	return i, err
 }
 
-const listUserRoadmaps = `-- name: ListUserRoadmaps :many
-SELECT id, owner_id, title, description, is_public, category, tags, difficult, created_at FROM roadmaps WHERE owner_id = $1 ORDER BY created_at DESC
+const getRoadmap = `-- name: GetRoadmap :one
+SELECT id, owner_id, title, description, is_public, category, tags, difficulty, created_at FROM roadmaps WHERE owner_id = $1
 `
 
-func (q *Queries) ListUserRoadmaps(ctx context.Context, ownerID uuid.UUID) ([]Roadmap, error) {
-	rows, err := q.db.Query(ctx, listUserRoadmaps, ownerID)
+func (q *Queries) GetRoadmap(ctx context.Context, ownerID uuid.UUID) (Roadmap, error) {
+	row := q.db.QueryRow(ctx, getRoadmap, ownerID)
+	var i Roadmap
+	err := row.Scan(
+		&i.ID,
+		&i.OwnerID,
+		&i.Title,
+		&i.Description,
+		&i.IsPublic,
+		&i.Category,
+		&i.Tags,
+		&i.Difficulty,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
+const listAllRoadmaps = `-- name: ListAllRoadmaps :many
+SELECT id, owner_id, title, description, is_public, category, tags, difficulty, created_at FROM roadmaps
+`
+
+func (q *Queries) ListAllRoadmaps(ctx context.Context) ([]Roadmap, error) {
+	rows, err := q.db.Query(ctx, listAllRoadmaps)
 	if err != nil {
 		return nil, err
 	}
@@ -88,7 +111,7 @@ func (q *Queries) ListUserRoadmaps(ctx context.Context, ownerID uuid.UUID) ([]Ro
 			&i.IsPublic,
 			&i.Category,
 			&i.Tags,
-			&i.Difficult,
+			&i.Difficulty,
 			&i.CreatedAt,
 		); err != nil {
 			return nil, err
@@ -99,4 +122,86 @@ func (q *Queries) ListUserRoadmaps(ctx context.Context, ownerID uuid.UUID) ([]Ro
 		return nil, err
 	}
 	return items, nil
+}
+
+const listUserRoadmaps = `-- name: ListUserRoadmaps :many
+SELECT id, owner_id, title, description, is_public, category, tags, difficulty, created_at FROM roadmaps WHERE id = $1 ORDER BY created_at DESC
+`
+
+func (q *Queries) ListUserRoadmaps(ctx context.Context, id uuid.UUID) ([]Roadmap, error) {
+	rows, err := q.db.Query(ctx, listUserRoadmaps, id)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Roadmap
+	for rows.Next() {
+		var i Roadmap
+		if err := rows.Scan(
+			&i.ID,
+			&i.OwnerID,
+			&i.Title,
+			&i.Description,
+			&i.IsPublic,
+			&i.Category,
+			&i.Tags,
+			&i.Difficulty,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const updateRoadmap = `-- name: UpdateRoadmap :one
+UPDATE roadmaps
+SET
+    title = $2,
+    description = $3,
+    is_public = $4,
+    category = $5,
+    tags = $6,
+    difficulty = $7
+WHERE id = $1
+RETURNING id, owner_id, title, description, is_public, category, tags, difficulty, created_at
+`
+
+type UpdateRoadmapParams struct {
+	ID          uuid.UUID `json:"id"`
+	Title       string    `json:"title"`
+	Description string    `json:"description"`
+	IsPublic    bool      `json:"is_public"`
+	Category    string    `json:"category"`
+	Tags        []string  `json:"tags"`
+	Difficulty  string    `json:"difficulty"`
+}
+
+func (q *Queries) UpdateRoadmap(ctx context.Context, arg UpdateRoadmapParams) (Roadmap, error) {
+	row := q.db.QueryRow(ctx, updateRoadmap,
+		arg.ID,
+		arg.Title,
+		arg.Description,
+		arg.IsPublic,
+		arg.Category,
+		arg.Tags,
+		arg.Difficulty,
+	)
+	var i Roadmap
+	err := row.Scan(
+		&i.ID,
+		&i.OwnerID,
+		&i.Title,
+		&i.Description,
+		&i.IsPublic,
+		&i.Category,
+		&i.Tags,
+		&i.Difficulty,
+		&i.CreatedAt,
+	)
+	return i, err
 }

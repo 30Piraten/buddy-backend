@@ -8,18 +8,23 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5/pgtype"
 )
 
 type Checkpoint struct {
-	ID            uuid.UUID   `json:"id"`
-	RoadmapID     uuid.UUID   `json:"roadmap_id"`
-	Title         string      `json:"title"`
-	Description   string      `json:"description"`
-	Position      int32       `json:"position"`
-	Type          string      `json:"type"`
-	Status        string      `json:"status"`
-	EstimatedTime int32       `json:"estimated_time"`
-	RewardPoints  pgtype.Int4 `json:"reward_points"`
-	CreatedAt     time.Time   `json:"created_at"`
+	ID            uuid.UUID `json:"id"`
+	RoadmapID     uuid.UUID `json:"roadmap_id"`
+	Title         string    `json:"title"`
+	Description   string    `json:"description"`
+	Position      int32     `json:"position"`
+	Type          string    `json:"type"`
+	Status        string    `json:"status"`
+	EstimatedTime int32     `json:"estimated_time"`
+	RewardPoints  int32     `json:"reward_points"`
+	CreatedAt     time.Time `json:"created_at"`
+}
+
+type UserCheckpoint struct {
+	UserID       uuid.UUID `json:"user_id"`
+	CheckpointID uuid.UUID `json:"checkpoint_id"`
+	Status       string    `json:"status"`
 }
