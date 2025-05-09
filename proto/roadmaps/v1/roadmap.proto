@@ -8,6 +8,10 @@ option go_package = "github.com/30Piraten/proto/go/gen/roadmaps/v1;roadmapv1";
 
 service RoadmapService {
     rpc CreateRoadmap(CreateRoadmapRequest) returns (CreateRoadmapResponse);
+    rpc ListRoadmaps(ListRoadmapsRequest) returns (ListRoadmapsResponse);
+    rpc GetRoadmap(GetRoadmapRequest) returns (GetRoadmapResponse);
+    rpc DeleteRoadmap(DeleteRoadmapRequest) returns (DeleteRoadmapResponse);
+    rpc UpdateRoadmap(UpdateRoadmapRequest) returns (UpdateRoadmapResponse);
 }
 
 message Roadmap {
@@ -23,12 +27,52 @@ message Roadmap {
 }
 
 message CreateRoadmapRequest {
-    string owner_id = 2; 
-    string title = 3;
-    string description = 4;
-    bool is_public = 5;
+    string owner_id = 1; 
+    string title = 2;
+    string description = 3;
+    bool is_public = 4;
 }
 
 message CreateRoadmapResponse {
+    Roadmap roadmap = 1;
+}
+
+message GetRoadmapRequest {
+    string roadmap_id = 1;
+}
+
+message GetRoadmapResponse {
+    Roadmap roadmap = 1;
+}
+
+message ListRoadmapsRequest {
+    string owner_id = 1;
+    string title = 2;
+    bool is_public = 3; 
+}
+
+message ListRoadmapsResponse {
+    repeated Roadmap roadmaps = 1; 
+}
+
+message UpdateRoadmapRequest {
+    string roadmap_id = 1;
+    string title = 2; 
+    string description = 3;
+    bool is_public = 4; 
+    string category = 5;
+    repeated string tags = 6; 
+    string difficulty = 7;
+}
+
+message UpdateRoadmapResponse {
+    Roadmap roadmap = 1;
+}
+
+message DeleteRoadmapRequest {
+    string roadmap_id = 1;
+}
+
+message DeleteRoadmapResponse {
     Roadmap roadmap = 1;
 }
