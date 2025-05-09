@@ -8,6 +8,11 @@ option go_package = "github.com/30Piraten/buddy-backend/gen/go/proto/checkpoints
 
 service CheckpointService {
     rpc CreateCheckpoint(CreateCheckpointRequest) returns (CreateCheckpointResponse);
+    rpc GetCheckpoint(GetCheckpointRequest) returns (GetCheckpointResponse);
+    rpc ListCheckpoints(ListCheckpointsRequest) returns (ListCheckpointsResponse);
+    rpc UpdateCheckpoint(UpdateCheckpointRequest) returns (UpdateCheckpointResponse);
+    rpc DeleteCheckpoint(DeleteCheckpointRequest) returns (DeleteCheckpointResponse);
+    rpc ListUserCheckpoints(ListUserCheckpointsRequest) returns (ListUserCheckpointsResponse);
 }
 
 // Define enum types separately
@@ -24,9 +29,9 @@ enum CheckpointStatus {
     CHECKPOINT_STATUS_STATUS_IN_PROGRESS = 2;
     CHECKPOINT_STATUS_STATUS_COMPLETED = 3;
 }
-
+// MESSAGES
 message Checkpoint {
-    string id = 1; 
+    string checkpoint_id = 1; 
     string roadmap_id = 2;
     string title = 3; 
     string description = 4;
@@ -34,10 +39,11 @@ message Checkpoint {
     CheckpointType type = 6; 
     CheckpointStatus status = 7;
     int32 estimated_time = 8;
-    int32 reward = 9;
+    int32 reward_points = 9;
     google.protobuf.Timestamp created_at = 10;
 }
 
+// CreateCheckpoint
 message CreateCheckpointRequest {
     string roadmap_id = 1; 
     string title = 2; 
@@ -51,4 +57,58 @@ message CreateCheckpointRequest {
 
 message CreateCheckpointResponse {
     Checkpoint checkpoint = 1; 
+}
+
+// GetCheckpoint
+message GetCheckpointRequest {
+    string checkpoint_id = 1; 
+}
+
+message GetCheckpointResponse {
+    Checkpoint checkpoint = 1; 
+}
+
+// ListCheckpoints
+message ListCheckpointsRequest {
+    string roadmap_id = 1;
+}
+
+message ListCheckpointsResponse {
+    repeated Checkpoint Checkpoints = 1;
+}
+
+// UpdateCheckpoint
+message UpdateCheckpointRequest {
+    string checkpoint_id = 1;
+    string title = 2;
+    string description = 3;
+    int32 position = 4; 
+    CheckpointType type = 5;
+    CheckpointStatus status = 6; 
+    int32 estimated_time = 7; 
+    int32 reward_points = 8; 
+}
+
+message UpdateCheckpointResponse {
+    Checkpoint checkpoint = 1;
+}
+
+// DeleteCheckpoint
+message DeleteCheckpointRequest {
+    string checkpoint_id = 1; 
+}
+
+message DeleteCheckpointResponse {
+    Checkpoint checkpoint = 1;
+}
+
+// User Checkpoint Listing
+message ListUserCheckpointsRequest {
+    string user_id = 1;
+    string roadmap_id = 2;
+    CheckpointStatus status = 3;
+}
+
+message ListUserCheckpointsResponse {
+    repeated Checkpoint checkpoints = 1;
 }
