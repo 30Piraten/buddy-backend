@@ -127,9 +127,10 @@ func (CheckpointStatus) EnumDescriptor() ([]byte, []int) {
 	return file_proto_checkpoints_v1_checkpoint_proto_rawDescGZIP(), []int{1}
 }
 
+// MESSAGES
 type Checkpoint struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	CheckpointId  string                 `protobuf:"bytes,1,opt,name=checkpoint_id,json=checkpointId,proto3" json:"checkpoint_id,omitempty"`
 	RoadmapId     string                 `protobuf:"bytes,2,opt,name=roadmap_id,json=roadmapId,proto3" json:"roadmap_id,omitempty"`
 	Title         string                 `protobuf:"bytes,3,opt,name=title,proto3" json:"title,omitempty"`
 	Description   string                 `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`
@@ -137,7 +138,7 @@ type Checkpoint struct {
 	Type          CheckpointType         `protobuf:"varint,6,opt,name=type,proto3,enum=proto.checkpoints.v1.CheckpointType" json:"type,omitempty"`
 	Status        CheckpointStatus       `protobuf:"varint,7,opt,name=status,proto3,enum=proto.checkpoints.v1.CheckpointStatus" json:"status,omitempty"`
 	EstimatedTime int32                  `protobuf:"varint,8,opt,name=estimated_time,json=estimatedTime,proto3" json:"estimated_time,omitempty"`
-	Reward        int32                  `protobuf:"varint,9,opt,name=reward,proto3" json:"reward,omitempty"`
+	RewardPoints  int32                  `protobuf:"varint,9,opt,name=reward_points,json=rewardPoints,proto3" json:"reward_points,omitempty"`
 	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,10,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -173,9 +174,9 @@ func (*Checkpoint) Descriptor() ([]byte, []int) {
 	return file_proto_checkpoints_v1_checkpoint_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *Checkpoint) GetId() string {
+func (x *Checkpoint) GetCheckpointId() string {
 	if x != nil {
-		return x.Id
+		return x.CheckpointId
 	}
 	return ""
 }
@@ -229,9 +230,9 @@ func (x *Checkpoint) GetEstimatedTime() int32 {
 	return 0
 }
 
-func (x *Checkpoint) GetReward() int32 {
+func (x *Checkpoint) GetRewardPoints() int32 {
 	if x != nil {
-		return x.Reward
+		return x.RewardPoints
 	}
 	return 0
 }
@@ -243,6 +244,7 @@ func (x *Checkpoint) GetCreatedAt() *timestamppb.Timestamp {
 	return nil
 }
 
+// CreateCheckpoint
 type CreateCheckpointRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	RoadmapId     string                 `protobuf:"bytes,1,opt,name=roadmap_id,json=roadmapId,proto3" json:"roadmap_id,omitempty"`
@@ -387,14 +389,531 @@ func (x *CreateCheckpointResponse) GetCheckpoint() *Checkpoint {
 	return nil
 }
 
+// GetCheckpoint
+type GetCheckpointRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	CheckpointId  string                 `protobuf:"bytes,1,opt,name=checkpoint_id,json=checkpointId,proto3" json:"checkpoint_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetCheckpointRequest) Reset() {
+	*x = GetCheckpointRequest{}
+	mi := &file_proto_checkpoints_v1_checkpoint_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetCheckpointRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetCheckpointRequest) ProtoMessage() {}
+
+func (x *GetCheckpointRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_checkpoints_v1_checkpoint_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetCheckpointRequest.ProtoReflect.Descriptor instead.
+func (*GetCheckpointRequest) Descriptor() ([]byte, []int) {
+	return file_proto_checkpoints_v1_checkpoint_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *GetCheckpointRequest) GetCheckpointId() string {
+	if x != nil {
+		return x.CheckpointId
+	}
+	return ""
+}
+
+type GetCheckpointResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Checkpoint    *Checkpoint            `protobuf:"bytes,1,opt,name=checkpoint,proto3" json:"checkpoint,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetCheckpointResponse) Reset() {
+	*x = GetCheckpointResponse{}
+	mi := &file_proto_checkpoints_v1_checkpoint_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetCheckpointResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetCheckpointResponse) ProtoMessage() {}
+
+func (x *GetCheckpointResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_checkpoints_v1_checkpoint_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetCheckpointResponse.ProtoReflect.Descriptor instead.
+func (*GetCheckpointResponse) Descriptor() ([]byte, []int) {
+	return file_proto_checkpoints_v1_checkpoint_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *GetCheckpointResponse) GetCheckpoint() *Checkpoint {
+	if x != nil {
+		return x.Checkpoint
+	}
+	return nil
+}
+
+// ListCheckpoints
+type ListCheckpointsRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	RoadmapId     string                 `protobuf:"bytes,1,opt,name=roadmap_id,json=roadmapId,proto3" json:"roadmap_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListCheckpointsRequest) Reset() {
+	*x = ListCheckpointsRequest{}
+	mi := &file_proto_checkpoints_v1_checkpoint_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListCheckpointsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListCheckpointsRequest) ProtoMessage() {}
+
+func (x *ListCheckpointsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_checkpoints_v1_checkpoint_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListCheckpointsRequest.ProtoReflect.Descriptor instead.
+func (*ListCheckpointsRequest) Descriptor() ([]byte, []int) {
+	return file_proto_checkpoints_v1_checkpoint_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *ListCheckpointsRequest) GetRoadmapId() string {
+	if x != nil {
+		return x.RoadmapId
+	}
+	return ""
+}
+
+type ListCheckpointsResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Checkpoints   []*Checkpoint          `protobuf:"bytes,1,rep,name=Checkpoints,proto3" json:"Checkpoints,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListCheckpointsResponse) Reset() {
+	*x = ListCheckpointsResponse{}
+	mi := &file_proto_checkpoints_v1_checkpoint_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListCheckpointsResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListCheckpointsResponse) ProtoMessage() {}
+
+func (x *ListCheckpointsResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_checkpoints_v1_checkpoint_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListCheckpointsResponse.ProtoReflect.Descriptor instead.
+func (*ListCheckpointsResponse) Descriptor() ([]byte, []int) {
+	return file_proto_checkpoints_v1_checkpoint_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *ListCheckpointsResponse) GetCheckpoints() []*Checkpoint {
+	if x != nil {
+		return x.Checkpoints
+	}
+	return nil
+}
+
+// UpdateCheckpoint
+type UpdateCheckpointRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	CheckpointId  string                 `protobuf:"bytes,1,opt,name=checkpoint_id,json=checkpointId,proto3" json:"checkpoint_id,omitempty"`
+	Title         string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
+	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
+	Position      int32                  `protobuf:"varint,4,opt,name=position,proto3" json:"position,omitempty"`
+	Type          CheckpointType         `protobuf:"varint,5,opt,name=type,proto3,enum=proto.checkpoints.v1.CheckpointType" json:"type,omitempty"`
+	Status        CheckpointStatus       `protobuf:"varint,6,opt,name=status,proto3,enum=proto.checkpoints.v1.CheckpointStatus" json:"status,omitempty"`
+	EstimatedTime int32                  `protobuf:"varint,7,opt,name=estimated_time,json=estimatedTime,proto3" json:"estimated_time,omitempty"`
+	RewardPoints  int32                  `protobuf:"varint,8,opt,name=reward_points,json=rewardPoints,proto3" json:"reward_points,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateCheckpointRequest) Reset() {
+	*x = UpdateCheckpointRequest{}
+	mi := &file_proto_checkpoints_v1_checkpoint_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateCheckpointRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateCheckpointRequest) ProtoMessage() {}
+
+func (x *UpdateCheckpointRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_checkpoints_v1_checkpoint_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateCheckpointRequest.ProtoReflect.Descriptor instead.
+func (*UpdateCheckpointRequest) Descriptor() ([]byte, []int) {
+	return file_proto_checkpoints_v1_checkpoint_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *UpdateCheckpointRequest) GetCheckpointId() string {
+	if x != nil {
+		return x.CheckpointId
+	}
+	return ""
+}
+
+func (x *UpdateCheckpointRequest) GetTitle() string {
+	if x != nil {
+		return x.Title
+	}
+	return ""
+}
+
+func (x *UpdateCheckpointRequest) GetDescription() string {
+	if x != nil {
+		return x.Description
+	}
+	return ""
+}
+
+func (x *UpdateCheckpointRequest) GetPosition() int32 {
+	if x != nil {
+		return x.Position
+	}
+	return 0
+}
+
+func (x *UpdateCheckpointRequest) GetType() CheckpointType {
+	if x != nil {
+		return x.Type
+	}
+	return CheckpointType_CHECKPOINT_TYPE_TYPE_UNSPECIFIED
+}
+
+func (x *UpdateCheckpointRequest) GetStatus() CheckpointStatus {
+	if x != nil {
+		return x.Status
+	}
+	return CheckpointStatus_CHECKPOINT_STATUS_STATUS_UNSPECIFIED
+}
+
+func (x *UpdateCheckpointRequest) GetEstimatedTime() int32 {
+	if x != nil {
+		return x.EstimatedTime
+	}
+	return 0
+}
+
+func (x *UpdateCheckpointRequest) GetRewardPoints() int32 {
+	if x != nil {
+		return x.RewardPoints
+	}
+	return 0
+}
+
+type UpdateCheckpointResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Checkpoint    *Checkpoint            `protobuf:"bytes,1,opt,name=checkpoint,proto3" json:"checkpoint,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateCheckpointResponse) Reset() {
+	*x = UpdateCheckpointResponse{}
+	mi := &file_proto_checkpoints_v1_checkpoint_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateCheckpointResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateCheckpointResponse) ProtoMessage() {}
+
+func (x *UpdateCheckpointResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_checkpoints_v1_checkpoint_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateCheckpointResponse.ProtoReflect.Descriptor instead.
+func (*UpdateCheckpointResponse) Descriptor() ([]byte, []int) {
+	return file_proto_checkpoints_v1_checkpoint_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *UpdateCheckpointResponse) GetCheckpoint() *Checkpoint {
+	if x != nil {
+		return x.Checkpoint
+	}
+	return nil
+}
+
+// DeleteCheckpoint
+type DeleteCheckpointRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	CheckpointId  string                 `protobuf:"bytes,1,opt,name=checkpoint_id,json=checkpointId,proto3" json:"checkpoint_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteCheckpointRequest) Reset() {
+	*x = DeleteCheckpointRequest{}
+	mi := &file_proto_checkpoints_v1_checkpoint_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteCheckpointRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteCheckpointRequest) ProtoMessage() {}
+
+func (x *DeleteCheckpointRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_checkpoints_v1_checkpoint_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteCheckpointRequest.ProtoReflect.Descriptor instead.
+func (*DeleteCheckpointRequest) Descriptor() ([]byte, []int) {
+	return file_proto_checkpoints_v1_checkpoint_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *DeleteCheckpointRequest) GetCheckpointId() string {
+	if x != nil {
+		return x.CheckpointId
+	}
+	return ""
+}
+
+type DeleteCheckpointResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Checkpoint    *Checkpoint            `protobuf:"bytes,1,opt,name=checkpoint,proto3" json:"checkpoint,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteCheckpointResponse) Reset() {
+	*x = DeleteCheckpointResponse{}
+	mi := &file_proto_checkpoints_v1_checkpoint_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteCheckpointResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteCheckpointResponse) ProtoMessage() {}
+
+func (x *DeleteCheckpointResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_checkpoints_v1_checkpoint_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteCheckpointResponse.ProtoReflect.Descriptor instead.
+func (*DeleteCheckpointResponse) Descriptor() ([]byte, []int) {
+	return file_proto_checkpoints_v1_checkpoint_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *DeleteCheckpointResponse) GetCheckpoint() *Checkpoint {
+	if x != nil {
+		return x.Checkpoint
+	}
+	return nil
+}
+
+// User Checkpoint Listing
+type ListUserCheckpointsRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	RoadmapId     string                 `protobuf:"bytes,2,opt,name=roadmap_id,json=roadmapId,proto3" json:"roadmap_id,omitempty"`
+	Status        CheckpointStatus       `protobuf:"varint,3,opt,name=status,proto3,enum=proto.checkpoints.v1.CheckpointStatus" json:"status,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListUserCheckpointsRequest) Reset() {
+	*x = ListUserCheckpointsRequest{}
+	mi := &file_proto_checkpoints_v1_checkpoint_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListUserCheckpointsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListUserCheckpointsRequest) ProtoMessage() {}
+
+func (x *ListUserCheckpointsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_checkpoints_v1_checkpoint_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListUserCheckpointsRequest.ProtoReflect.Descriptor instead.
+func (*ListUserCheckpointsRequest) Descriptor() ([]byte, []int) {
+	return file_proto_checkpoints_v1_checkpoint_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *ListUserCheckpointsRequest) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *ListUserCheckpointsRequest) GetRoadmapId() string {
+	if x != nil {
+		return x.RoadmapId
+	}
+	return ""
+}
+
+func (x *ListUserCheckpointsRequest) GetStatus() CheckpointStatus {
+	if x != nil {
+		return x.Status
+	}
+	return CheckpointStatus_CHECKPOINT_STATUS_STATUS_UNSPECIFIED
+}
+
+type ListUserCheckpointsResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Checkpoints   []*Checkpoint          `protobuf:"bytes,1,rep,name=checkpoints,proto3" json:"checkpoints,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListUserCheckpointsResponse) Reset() {
+	*x = ListUserCheckpointsResponse{}
+	mi := &file_proto_checkpoints_v1_checkpoint_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListUserCheckpointsResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListUserCheckpointsResponse) ProtoMessage() {}
+
+func (x *ListUserCheckpointsResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_checkpoints_v1_checkpoint_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListUserCheckpointsResponse.ProtoReflect.Descriptor instead.
+func (*ListUserCheckpointsResponse) Descriptor() ([]byte, []int) {
+	return file_proto_checkpoints_v1_checkpoint_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *ListUserCheckpointsResponse) GetCheckpoints() []*Checkpoint {
+	if x != nil {
+		return x.Checkpoints
+	}
+	return nil
+}
+
 var File_proto_checkpoints_v1_checkpoint_proto protoreflect.FileDescriptor
 
 const file_proto_checkpoints_v1_checkpoint_proto_rawDesc = "" +
 	"\n" +
-	"%proto/checkpoints/v1/checkpoint.proto\x12\x14proto.checkpoints.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\x83\x03\n" +
+	"%proto/checkpoints/v1/checkpoint.proto\x12\x14proto.checkpoints.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\xa5\x03\n" +
 	"\n" +
-	"Checkpoint\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1d\n" +
+	"Checkpoint\x12#\n" +
+	"\rcheckpoint_id\x18\x01 \x01(\tR\fcheckpointId\x12\x1d\n" +
 	"\n" +
 	"roadmap_id\x18\x02 \x01(\tR\troadmapId\x12\x14\n" +
 	"\x05title\x18\x03 \x01(\tR\x05title\x12 \n" +
@@ -402,8 +921,8 @@ const file_proto_checkpoints_v1_checkpoint_proto_rawDesc = "" +
 	"\bposition\x18\x05 \x01(\x05R\bposition\x128\n" +
 	"\x04type\x18\x06 \x01(\x0e2$.proto.checkpoints.v1.CheckpointTypeR\x04type\x12>\n" +
 	"\x06status\x18\a \x01(\x0e2&.proto.checkpoints.v1.CheckpointStatusR\x06status\x12%\n" +
-	"\x0eestimated_time\x18\b \x01(\x05R\restimatedTime\x12\x16\n" +
-	"\x06reward\x18\t \x01(\x05R\x06reward\x129\n" +
+	"\x0eestimated_time\x18\b \x01(\x05R\restimatedTime\x12#\n" +
+	"\rreward_points\x18\t \x01(\x05R\frewardPoints\x129\n" +
 	"\n" +
 	"created_at\x18\n" +
 	" \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\xd2\x02\n" +
@@ -420,7 +939,44 @@ const file_proto_checkpoints_v1_checkpoint_proto_rawDesc = "" +
 	"\x18CreateCheckpointResponse\x12@\n" +
 	"\n" +
 	"checkpoint\x18\x01 \x01(\v2 .proto.checkpoints.v1.CheckpointR\n" +
-	"checkpoint*\xa1\x01\n" +
+	"checkpoint\";\n" +
+	"\x14GetCheckpointRequest\x12#\n" +
+	"\rcheckpoint_id\x18\x01 \x01(\tR\fcheckpointId\"Y\n" +
+	"\x15GetCheckpointResponse\x12@\n" +
+	"\n" +
+	"checkpoint\x18\x01 \x01(\v2 .proto.checkpoints.v1.CheckpointR\n" +
+	"checkpoint\"7\n" +
+	"\x16ListCheckpointsRequest\x12\x1d\n" +
+	"\n" +
+	"roadmap_id\x18\x01 \x01(\tR\troadmapId\"]\n" +
+	"\x17ListCheckpointsResponse\x12B\n" +
+	"\vCheckpoints\x18\x01 \x03(\v2 .proto.checkpoints.v1.CheckpointR\vCheckpoints\"\xd8\x02\n" +
+	"\x17UpdateCheckpointRequest\x12#\n" +
+	"\rcheckpoint_id\x18\x01 \x01(\tR\fcheckpointId\x12\x14\n" +
+	"\x05title\x18\x02 \x01(\tR\x05title\x12 \n" +
+	"\vdescription\x18\x03 \x01(\tR\vdescription\x12\x1a\n" +
+	"\bposition\x18\x04 \x01(\x05R\bposition\x128\n" +
+	"\x04type\x18\x05 \x01(\x0e2$.proto.checkpoints.v1.CheckpointTypeR\x04type\x12>\n" +
+	"\x06status\x18\x06 \x01(\x0e2&.proto.checkpoints.v1.CheckpointStatusR\x06status\x12%\n" +
+	"\x0eestimated_time\x18\a \x01(\x05R\restimatedTime\x12#\n" +
+	"\rreward_points\x18\b \x01(\x05R\frewardPoints\"\\\n" +
+	"\x18UpdateCheckpointResponse\x12@\n" +
+	"\n" +
+	"checkpoint\x18\x01 \x01(\v2 .proto.checkpoints.v1.CheckpointR\n" +
+	"checkpoint\">\n" +
+	"\x17DeleteCheckpointRequest\x12#\n" +
+	"\rcheckpoint_id\x18\x01 \x01(\tR\fcheckpointId\"\\\n" +
+	"\x18DeleteCheckpointResponse\x12@\n" +
+	"\n" +
+	"checkpoint\x18\x01 \x01(\v2 .proto.checkpoints.v1.CheckpointR\n" +
+	"checkpoint\"\x94\x01\n" +
+	"\x1aListUserCheckpointsRequest\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x1d\n" +
+	"\n" +
+	"roadmap_id\x18\x02 \x01(\tR\troadmapId\x12>\n" +
+	"\x06status\x18\x03 \x01(\x0e2&.proto.checkpoints.v1.CheckpointStatusR\x06status\"a\n" +
+	"\x1bListUserCheckpointsResponse\x12B\n" +
+	"\vcheckpoints\x18\x01 \x03(\v2 .proto.checkpoints.v1.CheckpointR\vcheckpoints*\xa1\x01\n" +
 	"\x0eCheckpointType\x12$\n" +
 	" CHECKPOINT_TYPE_TYPE_UNSPECIFIED\x10\x00\x12!\n" +
 	"\x1dCHECKPOINT_TYPE_TYPE_LEARNING\x10\x01\x12!\n" +
@@ -430,9 +986,14 @@ const file_proto_checkpoints_v1_checkpoint_proto_rawDesc = "" +
 	"$CHECKPOINT_STATUS_STATUS_UNSPECIFIED\x10\x00\x12$\n" +
 	" CHECKPOINT_STATUS_STATUS_PENDING\x10\x01\x12(\n" +
 	"$CHECKPOINT_STATUS_STATUS_IN_PROGRESS\x10\x02\x12&\n" +
-	"\"CHECKPOINT_STATUS_STATUS_COMPLETED\x10\x032\x86\x01\n" +
+	"\"CHECKPOINT_STATUS_STATUS_COMPLETED\x10\x032\xc2\x05\n" +
 	"\x11CheckpointService\x12q\n" +
-	"\x10CreateCheckpoint\x12-.proto.checkpoints.v1.CreateCheckpointRequest\x1a..proto.checkpoints.v1.CreateCheckpointResponseBMZKgithub.com/30Piraten/buddy-backend/gen/go/proto/checkpoints/v1;checkpointv1b\x06proto3"
+	"\x10CreateCheckpoint\x12-.proto.checkpoints.v1.CreateCheckpointRequest\x1a..proto.checkpoints.v1.CreateCheckpointResponse\x12h\n" +
+	"\rGetCheckpoint\x12*.proto.checkpoints.v1.GetCheckpointRequest\x1a+.proto.checkpoints.v1.GetCheckpointResponse\x12n\n" +
+	"\x0fListCheckpoints\x12,.proto.checkpoints.v1.ListCheckpointsRequest\x1a-.proto.checkpoints.v1.ListCheckpointsResponse\x12q\n" +
+	"\x10UpdateCheckpoint\x12-.proto.checkpoints.v1.UpdateCheckpointRequest\x1a..proto.checkpoints.v1.UpdateCheckpointResponse\x12q\n" +
+	"\x10DeleteCheckpoint\x12-.proto.checkpoints.v1.DeleteCheckpointRequest\x1a..proto.checkpoints.v1.DeleteCheckpointResponse\x12z\n" +
+	"\x13ListUserCheckpoints\x120.proto.checkpoints.v1.ListUserCheckpointsRequest\x1a1.proto.checkpoints.v1.ListUserCheckpointsResponseBMZKgithub.com/30Piraten/buddy-backend/gen/go/proto/checkpoints/v1;checkpointv1b\x06proto3"
 
 var (
 	file_proto_checkpoints_v1_checkpoint_proto_rawDescOnce sync.Once
@@ -447,29 +1008,57 @@ func file_proto_checkpoints_v1_checkpoint_proto_rawDescGZIP() []byte {
 }
 
 var file_proto_checkpoints_v1_checkpoint_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
-var file_proto_checkpoints_v1_checkpoint_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_proto_checkpoints_v1_checkpoint_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
 var file_proto_checkpoints_v1_checkpoint_proto_goTypes = []any{
-	(CheckpointType)(0),              // 0: proto.checkpoints.v1.CheckpointType
-	(CheckpointStatus)(0),            // 1: proto.checkpoints.v1.CheckpointStatus
-	(*Checkpoint)(nil),               // 2: proto.checkpoints.v1.Checkpoint
-	(*CreateCheckpointRequest)(nil),  // 3: proto.checkpoints.v1.CreateCheckpointRequest
-	(*CreateCheckpointResponse)(nil), // 4: proto.checkpoints.v1.CreateCheckpointResponse
-	(*timestamppb.Timestamp)(nil),    // 5: google.protobuf.Timestamp
+	(CheckpointType)(0),                 // 0: proto.checkpoints.v1.CheckpointType
+	(CheckpointStatus)(0),               // 1: proto.checkpoints.v1.CheckpointStatus
+	(*Checkpoint)(nil),                  // 2: proto.checkpoints.v1.Checkpoint
+	(*CreateCheckpointRequest)(nil),     // 3: proto.checkpoints.v1.CreateCheckpointRequest
+	(*CreateCheckpointResponse)(nil),    // 4: proto.checkpoints.v1.CreateCheckpointResponse
+	(*GetCheckpointRequest)(nil),        // 5: proto.checkpoints.v1.GetCheckpointRequest
+	(*GetCheckpointResponse)(nil),       // 6: proto.checkpoints.v1.GetCheckpointResponse
+	(*ListCheckpointsRequest)(nil),      // 7: proto.checkpoints.v1.ListCheckpointsRequest
+	(*ListCheckpointsResponse)(nil),     // 8: proto.checkpoints.v1.ListCheckpointsResponse
+	(*UpdateCheckpointRequest)(nil),     // 9: proto.checkpoints.v1.UpdateCheckpointRequest
+	(*UpdateCheckpointResponse)(nil),    // 10: proto.checkpoints.v1.UpdateCheckpointResponse
+	(*DeleteCheckpointRequest)(nil),     // 11: proto.checkpoints.v1.DeleteCheckpointRequest
+	(*DeleteCheckpointResponse)(nil),    // 12: proto.checkpoints.v1.DeleteCheckpointResponse
+	(*ListUserCheckpointsRequest)(nil),  // 13: proto.checkpoints.v1.ListUserCheckpointsRequest
+	(*ListUserCheckpointsResponse)(nil), // 14: proto.checkpoints.v1.ListUserCheckpointsResponse
+	(*timestamppb.Timestamp)(nil),       // 15: google.protobuf.Timestamp
 }
 var file_proto_checkpoints_v1_checkpoint_proto_depIdxs = []int32{
-	0, // 0: proto.checkpoints.v1.Checkpoint.type:type_name -> proto.checkpoints.v1.CheckpointType
-	1, // 1: proto.checkpoints.v1.Checkpoint.status:type_name -> proto.checkpoints.v1.CheckpointStatus
-	5, // 2: proto.checkpoints.v1.Checkpoint.created_at:type_name -> google.protobuf.Timestamp
-	0, // 3: proto.checkpoints.v1.CreateCheckpointRequest.type:type_name -> proto.checkpoints.v1.CheckpointType
-	1, // 4: proto.checkpoints.v1.CreateCheckpointRequest.status:type_name -> proto.checkpoints.v1.CheckpointStatus
-	2, // 5: proto.checkpoints.v1.CreateCheckpointResponse.checkpoint:type_name -> proto.checkpoints.v1.Checkpoint
-	3, // 6: proto.checkpoints.v1.CheckpointService.CreateCheckpoint:input_type -> proto.checkpoints.v1.CreateCheckpointRequest
-	4, // 7: proto.checkpoints.v1.CheckpointService.CreateCheckpoint:output_type -> proto.checkpoints.v1.CreateCheckpointResponse
-	7, // [7:8] is the sub-list for method output_type
-	6, // [6:7] is the sub-list for method input_type
-	6, // [6:6] is the sub-list for extension type_name
-	6, // [6:6] is the sub-list for extension extendee
-	0, // [0:6] is the sub-list for field type_name
+	0,  // 0: proto.checkpoints.v1.Checkpoint.type:type_name -> proto.checkpoints.v1.CheckpointType
+	1,  // 1: proto.checkpoints.v1.Checkpoint.status:type_name -> proto.checkpoints.v1.CheckpointStatus
+	15, // 2: proto.checkpoints.v1.Checkpoint.created_at:type_name -> google.protobuf.Timestamp
+	0,  // 3: proto.checkpoints.v1.CreateCheckpointRequest.type:type_name -> proto.checkpoints.v1.CheckpointType
+	1,  // 4: proto.checkpoints.v1.CreateCheckpointRequest.status:type_name -> proto.checkpoints.v1.CheckpointStatus
+	2,  // 5: proto.checkpoints.v1.CreateCheckpointResponse.checkpoint:type_name -> proto.checkpoints.v1.Checkpoint
+	2,  // 6: proto.checkpoints.v1.GetCheckpointResponse.checkpoint:type_name -> proto.checkpoints.v1.Checkpoint
+	2,  // 7: proto.checkpoints.v1.ListCheckpointsResponse.Checkpoints:type_name -> proto.checkpoints.v1.Checkpoint
+	0,  // 8: proto.checkpoints.v1.UpdateCheckpointRequest.type:type_name -> proto.checkpoints.v1.CheckpointType
+	1,  // 9: proto.checkpoints.v1.UpdateCheckpointRequest.status:type_name -> proto.checkpoints.v1.CheckpointStatus
+	2,  // 10: proto.checkpoints.v1.UpdateCheckpointResponse.checkpoint:type_name -> proto.checkpoints.v1.Checkpoint
+	2,  // 11: proto.checkpoints.v1.DeleteCheckpointResponse.checkpoint:type_name -> proto.checkpoints.v1.Checkpoint
+	1,  // 12: proto.checkpoints.v1.ListUserCheckpointsRequest.status:type_name -> proto.checkpoints.v1.CheckpointStatus
+	2,  // 13: proto.checkpoints.v1.ListUserCheckpointsResponse.checkpoints:type_name -> proto.checkpoints.v1.Checkpoint
+	3,  // 14: proto.checkpoints.v1.CheckpointService.CreateCheckpoint:input_type -> proto.checkpoints.v1.CreateCheckpointRequest
+	5,  // 15: proto.checkpoints.v1.CheckpointService.GetCheckpoint:input_type -> proto.checkpoints.v1.GetCheckpointRequest
+	7,  // 16: proto.checkpoints.v1.CheckpointService.ListCheckpoints:input_type -> proto.checkpoints.v1.ListCheckpointsRequest
+	9,  // 17: proto.checkpoints.v1.CheckpointService.UpdateCheckpoint:input_type -> proto.checkpoints.v1.UpdateCheckpointRequest
+	11, // 18: proto.checkpoints.v1.CheckpointService.DeleteCheckpoint:input_type -> proto.checkpoints.v1.DeleteCheckpointRequest
+	13, // 19: proto.checkpoints.v1.CheckpointService.ListUserCheckpoints:input_type -> proto.checkpoints.v1.ListUserCheckpointsRequest
+	4,  // 20: proto.checkpoints.v1.CheckpointService.CreateCheckpoint:output_type -> proto.checkpoints.v1.CreateCheckpointResponse
+	6,  // 21: proto.checkpoints.v1.CheckpointService.GetCheckpoint:output_type -> proto.checkpoints.v1.GetCheckpointResponse
+	8,  // 22: proto.checkpoints.v1.CheckpointService.ListCheckpoints:output_type -> proto.checkpoints.v1.ListCheckpointsResponse
+	10, // 23: proto.checkpoints.v1.CheckpointService.UpdateCheckpoint:output_type -> proto.checkpoints.v1.UpdateCheckpointResponse
+	12, // 24: proto.checkpoints.v1.CheckpointService.DeleteCheckpoint:output_type -> proto.checkpoints.v1.DeleteCheckpointResponse
+	14, // 25: proto.checkpoints.v1.CheckpointService.ListUserCheckpoints:output_type -> proto.checkpoints.v1.ListUserCheckpointsResponse
+	20, // [20:26] is the sub-list for method output_type
+	14, // [14:20] is the sub-list for method input_type
+	14, // [14:14] is the sub-list for extension type_name
+	14, // [14:14] is the sub-list for extension extendee
+	0,  // [0:14] is the sub-list for field type_name
 }
 
 func init() { file_proto_checkpoints_v1_checkpoint_proto_init() }
@@ -483,7 +1072,7 @@ func file_proto_checkpoints_v1_checkpoint_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_checkpoints_v1_checkpoint_proto_rawDesc), len(file_proto_checkpoints_v1_checkpoint_proto_rawDesc)),
 			NumEnums:      2,
-			NumMessages:   3,
+			NumMessages:   13,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

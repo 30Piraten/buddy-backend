@@ -132,10 +132,10 @@ func (x *Roadmap) GetCreatedAt() *timestamppb.Timestamp {
 
 type CreateRoadmapRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	OwnerId       string                 `protobuf:"bytes,2,opt,name=owner_id,json=ownerId,proto3" json:"owner_id,omitempty"`
-	Title         string                 `protobuf:"bytes,3,opt,name=title,proto3" json:"title,omitempty"`
-	Description   string                 `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`
-	IsPublic      bool                   `protobuf:"varint,5,opt,name=is_public,json=isPublic,proto3" json:"is_public,omitempty"`
+	OwnerId       string                 `protobuf:"bytes,1,opt,name=owner_id,json=ownerId,proto3" json:"owner_id,omitempty"`
+	Title         string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
+	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
+	IsPublic      bool                   `protobuf:"varint,4,opt,name=is_public,json=isPublic,proto3" json:"is_public,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -242,6 +242,422 @@ func (x *CreateRoadmapResponse) GetRoadmap() *Roadmap {
 	return nil
 }
 
+type GetRoadmapRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	RoadmapId     string                 `protobuf:"bytes,1,opt,name=roadmap_id,json=roadmapId,proto3" json:"roadmap_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetRoadmapRequest) Reset() {
+	*x = GetRoadmapRequest{}
+	mi := &file_proto_roadmaps_v1_roadmap_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetRoadmapRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetRoadmapRequest) ProtoMessage() {}
+
+func (x *GetRoadmapRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_roadmaps_v1_roadmap_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetRoadmapRequest.ProtoReflect.Descriptor instead.
+func (*GetRoadmapRequest) Descriptor() ([]byte, []int) {
+	return file_proto_roadmaps_v1_roadmap_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *GetRoadmapRequest) GetRoadmapId() string {
+	if x != nil {
+		return x.RoadmapId
+	}
+	return ""
+}
+
+type GetRoadmapResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Roadmap       *Roadmap               `protobuf:"bytes,1,opt,name=roadmap,proto3" json:"roadmap,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetRoadmapResponse) Reset() {
+	*x = GetRoadmapResponse{}
+	mi := &file_proto_roadmaps_v1_roadmap_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetRoadmapResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetRoadmapResponse) ProtoMessage() {}
+
+func (x *GetRoadmapResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_roadmaps_v1_roadmap_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetRoadmapResponse.ProtoReflect.Descriptor instead.
+func (*GetRoadmapResponse) Descriptor() ([]byte, []int) {
+	return file_proto_roadmaps_v1_roadmap_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *GetRoadmapResponse) GetRoadmap() *Roadmap {
+	if x != nil {
+		return x.Roadmap
+	}
+	return nil
+}
+
+type ListRoadmapsRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	OwnerId       string                 `protobuf:"bytes,1,opt,name=owner_id,json=ownerId,proto3" json:"owner_id,omitempty"`
+	Title         string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
+	IsPublic      bool                   `protobuf:"varint,3,opt,name=is_public,json=isPublic,proto3" json:"is_public,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListRoadmapsRequest) Reset() {
+	*x = ListRoadmapsRequest{}
+	mi := &file_proto_roadmaps_v1_roadmap_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListRoadmapsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListRoadmapsRequest) ProtoMessage() {}
+
+func (x *ListRoadmapsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_roadmaps_v1_roadmap_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListRoadmapsRequest.ProtoReflect.Descriptor instead.
+func (*ListRoadmapsRequest) Descriptor() ([]byte, []int) {
+	return file_proto_roadmaps_v1_roadmap_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *ListRoadmapsRequest) GetOwnerId() string {
+	if x != nil {
+		return x.OwnerId
+	}
+	return ""
+}
+
+func (x *ListRoadmapsRequest) GetTitle() string {
+	if x != nil {
+		return x.Title
+	}
+	return ""
+}
+
+func (x *ListRoadmapsRequest) GetIsPublic() bool {
+	if x != nil {
+		return x.IsPublic
+	}
+	return false
+}
+
+type ListRoadmapsResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Roadmaps      []*Roadmap             `protobuf:"bytes,1,rep,name=roadmaps,proto3" json:"roadmaps,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListRoadmapsResponse) Reset() {
+	*x = ListRoadmapsResponse{}
+	mi := &file_proto_roadmaps_v1_roadmap_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListRoadmapsResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListRoadmapsResponse) ProtoMessage() {}
+
+func (x *ListRoadmapsResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_roadmaps_v1_roadmap_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListRoadmapsResponse.ProtoReflect.Descriptor instead.
+func (*ListRoadmapsResponse) Descriptor() ([]byte, []int) {
+	return file_proto_roadmaps_v1_roadmap_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *ListRoadmapsResponse) GetRoadmaps() []*Roadmap {
+	if x != nil {
+		return x.Roadmaps
+	}
+	return nil
+}
+
+type UpdateRoadmapRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	RoadmapId     string                 `protobuf:"bytes,1,opt,name=roadmap_id,json=roadmapId,proto3" json:"roadmap_id,omitempty"`
+	Title         string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
+	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
+	IsPublic      bool                   `protobuf:"varint,4,opt,name=is_public,json=isPublic,proto3" json:"is_public,omitempty"`
+	Category      string                 `protobuf:"bytes,5,opt,name=category,proto3" json:"category,omitempty"`
+	Tags          []string               `protobuf:"bytes,6,rep,name=tags,proto3" json:"tags,omitempty"`
+	Difficulty    string                 `protobuf:"bytes,7,opt,name=difficulty,proto3" json:"difficulty,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateRoadmapRequest) Reset() {
+	*x = UpdateRoadmapRequest{}
+	mi := &file_proto_roadmaps_v1_roadmap_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateRoadmapRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateRoadmapRequest) ProtoMessage() {}
+
+func (x *UpdateRoadmapRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_roadmaps_v1_roadmap_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateRoadmapRequest.ProtoReflect.Descriptor instead.
+func (*UpdateRoadmapRequest) Descriptor() ([]byte, []int) {
+	return file_proto_roadmaps_v1_roadmap_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *UpdateRoadmapRequest) GetRoadmapId() string {
+	if x != nil {
+		return x.RoadmapId
+	}
+	return ""
+}
+
+func (x *UpdateRoadmapRequest) GetTitle() string {
+	if x != nil {
+		return x.Title
+	}
+	return ""
+}
+
+func (x *UpdateRoadmapRequest) GetDescription() string {
+	if x != nil {
+		return x.Description
+	}
+	return ""
+}
+
+func (x *UpdateRoadmapRequest) GetIsPublic() bool {
+	if x != nil {
+		return x.IsPublic
+	}
+	return false
+}
+
+func (x *UpdateRoadmapRequest) GetCategory() string {
+	if x != nil {
+		return x.Category
+	}
+	return ""
+}
+
+func (x *UpdateRoadmapRequest) GetTags() []string {
+	if x != nil {
+		return x.Tags
+	}
+	return nil
+}
+
+func (x *UpdateRoadmapRequest) GetDifficulty() string {
+	if x != nil {
+		return x.Difficulty
+	}
+	return ""
+}
+
+type UpdateRoadmapResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Roadmap       *Roadmap               `protobuf:"bytes,1,opt,name=roadmap,proto3" json:"roadmap,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateRoadmapResponse) Reset() {
+	*x = UpdateRoadmapResponse{}
+	mi := &file_proto_roadmaps_v1_roadmap_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateRoadmapResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateRoadmapResponse) ProtoMessage() {}
+
+func (x *UpdateRoadmapResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_roadmaps_v1_roadmap_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateRoadmapResponse.ProtoReflect.Descriptor instead.
+func (*UpdateRoadmapResponse) Descriptor() ([]byte, []int) {
+	return file_proto_roadmaps_v1_roadmap_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *UpdateRoadmapResponse) GetRoadmap() *Roadmap {
+	if x != nil {
+		return x.Roadmap
+	}
+	return nil
+}
+
+type DeleteRoadmapRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	RoadmapId     string                 `protobuf:"bytes,1,opt,name=roadmap_id,json=roadmapId,proto3" json:"roadmap_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteRoadmapRequest) Reset() {
+	*x = DeleteRoadmapRequest{}
+	mi := &file_proto_roadmaps_v1_roadmap_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteRoadmapRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteRoadmapRequest) ProtoMessage() {}
+
+func (x *DeleteRoadmapRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_roadmaps_v1_roadmap_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteRoadmapRequest.ProtoReflect.Descriptor instead.
+func (*DeleteRoadmapRequest) Descriptor() ([]byte, []int) {
+	return file_proto_roadmaps_v1_roadmap_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *DeleteRoadmapRequest) GetRoadmapId() string {
+	if x != nil {
+		return x.RoadmapId
+	}
+	return ""
+}
+
+type DeleteRoadmapResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Roadmap       *Roadmap               `protobuf:"bytes,1,opt,name=roadmap,proto3" json:"roadmap,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteRoadmapResponse) Reset() {
+	*x = DeleteRoadmapResponse{}
+	mi := &file_proto_roadmaps_v1_roadmap_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteRoadmapResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteRoadmapResponse) ProtoMessage() {}
+
+func (x *DeleteRoadmapResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_roadmaps_v1_roadmap_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteRoadmapResponse.ProtoReflect.Descriptor instead.
+func (*DeleteRoadmapResponse) Descriptor() ([]byte, []int) {
+	return file_proto_roadmaps_v1_roadmap_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *DeleteRoadmapResponse) GetRoadmap() *Roadmap {
+	if x != nil {
+		return x.Roadmap
+	}
+	return nil
+}
+
 var File_proto_roadmaps_v1_roadmap_proto protoreflect.FileDescriptor
 
 const file_proto_roadmaps_v1_roadmap_proto_rawDesc = "" +
@@ -259,14 +675,48 @@ const file_proto_roadmaps_v1_roadmap_proto_rawDesc = "" +
 	"\n" +
 	"created_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\x86\x01\n" +
 	"\x14CreateRoadmapRequest\x12\x19\n" +
-	"\bowner_id\x18\x02 \x01(\tR\aownerId\x12\x14\n" +
-	"\x05title\x18\x03 \x01(\tR\x05title\x12 \n" +
-	"\vdescription\x18\x04 \x01(\tR\vdescription\x12\x1b\n" +
-	"\tis_public\x18\x05 \x01(\bR\bisPublic\"M\n" +
+	"\bowner_id\x18\x01 \x01(\tR\aownerId\x12\x14\n" +
+	"\x05title\x18\x02 \x01(\tR\x05title\x12 \n" +
+	"\vdescription\x18\x03 \x01(\tR\vdescription\x12\x1b\n" +
+	"\tis_public\x18\x04 \x01(\bR\bisPublic\"M\n" +
 	"\x15CreateRoadmapResponse\x124\n" +
-	"\aroadmap\x18\x01 \x01(\v2\x1a.proto.roadmaps.v1.RoadmapR\aroadmap2t\n" +
+	"\aroadmap\x18\x01 \x01(\v2\x1a.proto.roadmaps.v1.RoadmapR\aroadmap\"2\n" +
+	"\x11GetRoadmapRequest\x12\x1d\n" +
+	"\n" +
+	"roadmap_id\x18\x01 \x01(\tR\troadmapId\"J\n" +
+	"\x12GetRoadmapResponse\x124\n" +
+	"\aroadmap\x18\x01 \x01(\v2\x1a.proto.roadmaps.v1.RoadmapR\aroadmap\"c\n" +
+	"\x13ListRoadmapsRequest\x12\x19\n" +
+	"\bowner_id\x18\x01 \x01(\tR\aownerId\x12\x14\n" +
+	"\x05title\x18\x02 \x01(\tR\x05title\x12\x1b\n" +
+	"\tis_public\x18\x03 \x01(\bR\bisPublic\"N\n" +
+	"\x14ListRoadmapsResponse\x126\n" +
+	"\broadmaps\x18\x01 \x03(\v2\x1a.proto.roadmaps.v1.RoadmapR\broadmaps\"\xda\x01\n" +
+	"\x14UpdateRoadmapRequest\x12\x1d\n" +
+	"\n" +
+	"roadmap_id\x18\x01 \x01(\tR\troadmapId\x12\x14\n" +
+	"\x05title\x18\x02 \x01(\tR\x05title\x12 \n" +
+	"\vdescription\x18\x03 \x01(\tR\vdescription\x12\x1b\n" +
+	"\tis_public\x18\x04 \x01(\bR\bisPublic\x12\x1a\n" +
+	"\bcategory\x18\x05 \x01(\tR\bcategory\x12\x12\n" +
+	"\x04tags\x18\x06 \x03(\tR\x04tags\x12\x1e\n" +
+	"\n" +
+	"difficulty\x18\a \x01(\tR\n" +
+	"difficulty\"M\n" +
+	"\x15UpdateRoadmapResponse\x124\n" +
+	"\aroadmap\x18\x01 \x01(\v2\x1a.proto.roadmaps.v1.RoadmapR\aroadmap\"5\n" +
+	"\x14DeleteRoadmapRequest\x12\x1d\n" +
+	"\n" +
+	"roadmap_id\x18\x01 \x01(\tR\troadmapId\"M\n" +
+	"\x15DeleteRoadmapResponse\x124\n" +
+	"\aroadmap\x18\x01 \x01(\v2\x1a.proto.roadmaps.v1.RoadmapR\aroadmap2\xf8\x03\n" +
 	"\x0eRoadmapService\x12b\n" +
-	"\rCreateRoadmap\x12'.proto.roadmaps.v1.CreateRoadmapRequest\x1a(.proto.roadmaps.v1.CreateRoadmapResponseB9Z7github.com/30Piraten/proto/go/gen/roadmaps/v1;roadmapv1b\x06proto3"
+	"\rCreateRoadmap\x12'.proto.roadmaps.v1.CreateRoadmapRequest\x1a(.proto.roadmaps.v1.CreateRoadmapResponse\x12_\n" +
+	"\fListRoadmaps\x12&.proto.roadmaps.v1.ListRoadmapsRequest\x1a'.proto.roadmaps.v1.ListRoadmapsResponse\x12Y\n" +
+	"\n" +
+	"GetRoadmap\x12$.proto.roadmaps.v1.GetRoadmapRequest\x1a%.proto.roadmaps.v1.GetRoadmapResponse\x12b\n" +
+	"\rDeleteRoadmap\x12'.proto.roadmaps.v1.DeleteRoadmapRequest\x1a(.proto.roadmaps.v1.DeleteRoadmapResponse\x12b\n" +
+	"\rUpdateRoadmap\x12'.proto.roadmaps.v1.UpdateRoadmapRequest\x1a(.proto.roadmaps.v1.UpdateRoadmapResponseB9Z7github.com/30Piraten/proto/go/gen/roadmaps/v1;roadmapv1b\x06proto3"
 
 var (
 	file_proto_roadmaps_v1_roadmap_proto_rawDescOnce sync.Once
@@ -280,23 +730,43 @@ func file_proto_roadmaps_v1_roadmap_proto_rawDescGZIP() []byte {
 	return file_proto_roadmaps_v1_roadmap_proto_rawDescData
 }
 
-var file_proto_roadmaps_v1_roadmap_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_proto_roadmaps_v1_roadmap_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
 var file_proto_roadmaps_v1_roadmap_proto_goTypes = []any{
 	(*Roadmap)(nil),               // 0: proto.roadmaps.v1.Roadmap
 	(*CreateRoadmapRequest)(nil),  // 1: proto.roadmaps.v1.CreateRoadmapRequest
 	(*CreateRoadmapResponse)(nil), // 2: proto.roadmaps.v1.CreateRoadmapResponse
-	(*timestamppb.Timestamp)(nil), // 3: google.protobuf.Timestamp
+	(*GetRoadmapRequest)(nil),     // 3: proto.roadmaps.v1.GetRoadmapRequest
+	(*GetRoadmapResponse)(nil),    // 4: proto.roadmaps.v1.GetRoadmapResponse
+	(*ListRoadmapsRequest)(nil),   // 5: proto.roadmaps.v1.ListRoadmapsRequest
+	(*ListRoadmapsResponse)(nil),  // 6: proto.roadmaps.v1.ListRoadmapsResponse
+	(*UpdateRoadmapRequest)(nil),  // 7: proto.roadmaps.v1.UpdateRoadmapRequest
+	(*UpdateRoadmapResponse)(nil), // 8: proto.roadmaps.v1.UpdateRoadmapResponse
+	(*DeleteRoadmapRequest)(nil),  // 9: proto.roadmaps.v1.DeleteRoadmapRequest
+	(*DeleteRoadmapResponse)(nil), // 10: proto.roadmaps.v1.DeleteRoadmapResponse
+	(*timestamppb.Timestamp)(nil), // 11: google.protobuf.Timestamp
 }
 var file_proto_roadmaps_v1_roadmap_proto_depIdxs = []int32{
-	3, // 0: proto.roadmaps.v1.Roadmap.created_at:type_name -> google.protobuf.Timestamp
-	0, // 1: proto.roadmaps.v1.CreateRoadmapResponse.roadmap:type_name -> proto.roadmaps.v1.Roadmap
-	1, // 2: proto.roadmaps.v1.RoadmapService.CreateRoadmap:input_type -> proto.roadmaps.v1.CreateRoadmapRequest
-	2, // 3: proto.roadmaps.v1.RoadmapService.CreateRoadmap:output_type -> proto.roadmaps.v1.CreateRoadmapResponse
-	3, // [3:4] is the sub-list for method output_type
-	2, // [2:3] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	11, // 0: proto.roadmaps.v1.Roadmap.created_at:type_name -> google.protobuf.Timestamp
+	0,  // 1: proto.roadmaps.v1.CreateRoadmapResponse.roadmap:type_name -> proto.roadmaps.v1.Roadmap
+	0,  // 2: proto.roadmaps.v1.GetRoadmapResponse.roadmap:type_name -> proto.roadmaps.v1.Roadmap
+	0,  // 3: proto.roadmaps.v1.ListRoadmapsResponse.roadmaps:type_name -> proto.roadmaps.v1.Roadmap
+	0,  // 4: proto.roadmaps.v1.UpdateRoadmapResponse.roadmap:type_name -> proto.roadmaps.v1.Roadmap
+	0,  // 5: proto.roadmaps.v1.DeleteRoadmapResponse.roadmap:type_name -> proto.roadmaps.v1.Roadmap
+	1,  // 6: proto.roadmaps.v1.RoadmapService.CreateRoadmap:input_type -> proto.roadmaps.v1.CreateRoadmapRequest
+	5,  // 7: proto.roadmaps.v1.RoadmapService.ListRoadmaps:input_type -> proto.roadmaps.v1.ListRoadmapsRequest
+	3,  // 8: proto.roadmaps.v1.RoadmapService.GetRoadmap:input_type -> proto.roadmaps.v1.GetRoadmapRequest
+	9,  // 9: proto.roadmaps.v1.RoadmapService.DeleteRoadmap:input_type -> proto.roadmaps.v1.DeleteRoadmapRequest
+	7,  // 10: proto.roadmaps.v1.RoadmapService.UpdateRoadmap:input_type -> proto.roadmaps.v1.UpdateRoadmapRequest
+	2,  // 11: proto.roadmaps.v1.RoadmapService.CreateRoadmap:output_type -> proto.roadmaps.v1.CreateRoadmapResponse
+	6,  // 12: proto.roadmaps.v1.RoadmapService.ListRoadmaps:output_type -> proto.roadmaps.v1.ListRoadmapsResponse
+	4,  // 13: proto.roadmaps.v1.RoadmapService.GetRoadmap:output_type -> proto.roadmaps.v1.GetRoadmapResponse
+	10, // 14: proto.roadmaps.v1.RoadmapService.DeleteRoadmap:output_type -> proto.roadmaps.v1.DeleteRoadmapResponse
+	8,  // 15: proto.roadmaps.v1.RoadmapService.UpdateRoadmap:output_type -> proto.roadmaps.v1.UpdateRoadmapResponse
+	11, // [11:16] is the sub-list for method output_type
+	6,  // [6:11] is the sub-list for method input_type
+	6,  // [6:6] is the sub-list for extension type_name
+	6,  // [6:6] is the sub-list for extension extendee
+	0,  // [0:6] is the sub-list for field type_name
 }
 
 func init() { file_proto_roadmaps_v1_roadmap_proto_init() }
@@ -310,7 +780,7 @@ func file_proto_roadmaps_v1_roadmap_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_roadmaps_v1_roadmap_proto_rawDesc), len(file_proto_roadmaps_v1_roadmap_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   3,
+			NumMessages:   11,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
