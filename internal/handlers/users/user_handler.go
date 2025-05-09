@@ -2,12 +2,12 @@ package users
 
 import (
 	"context"
-	"log"
 	"time"
 
 	usersv1 "github.com/30Piraten/buddy-backend/gen/go/proto/users/v1"
 	usergen "github.com/30Piraten/buddy-backend/internal/db/users/user_generated"
 	"github.com/google/uuid"
+	"github.com/rs/zerolog/log"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -41,7 +41,7 @@ func (h *Handler) CreateUser(ctx context.Context, req *usersv1.CreateUserRequest
 	})
 
 	if err != nil {
-		log.Printf("Error creating user: %v", err)
+		log.Error().Err(err).Msg("Failed to create user")
 		return nil, err
 	}
 
@@ -54,13 +54,13 @@ func (h *Handler) CreateUser(ctx context.Context, req *usersv1.CreateUserRequest
 func (h *Handler) GetUser(ctx context.Context, req *usersv1.GetUserRequest) (*usersv1.GetUserResponse, error) {
 	uid, err := uuid.Parse(req.Id)
 	if err != nil {
-		log.Printf("Invalid UUID: %v", err)
+		log.Error().Err(err).Msg("The UUID is invalid")
 		return nil, err
 	}
 
 	user, err := h.db.GetUser(ctx, uid)
 	if err != nil {
-		log.Printf("Error fetching user: %v", err)
+		log.Error().Err(err).Msg("Could not fetch user")
 		return nil, err
 	}
 
@@ -73,7 +73,7 @@ func (h *Handler) GetUser(ctx context.Context, req *usersv1.GetUserRequest) (*us
 func (h *Handler) ListUsers(ctx context.Context, _ *emptypb.Empty) (*usersv1.ListUsersResponse, error) {
 	users, err := h.db.ListAllUsers(ctx)
 	if err != nil {
-		log.Printf("Error listing users: %v", err)
+		log.Error().Err(err).Msg("Failed to list users")
 		return nil, err
 	}
 
