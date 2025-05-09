@@ -47,6 +47,10 @@ sql:
             go_type: "string"
           - column: "*.is_public"
             go_type: "bool"
+          - column: "*.category"
+            go_type: "string"
+          - column: "*.difficulty"
+            go_type: "string"
 
   # Checkpoint module
   - engine: "postgresql"
@@ -69,7 +73,5 @@ sql:
             go_type: "int32"
           - column: "*.position"
             go_type: "int32"
-          - column: "*.status"
-            go_type: "string"
-          - column: "*.reward"
+          - column: "*.reward_points"
             go_type: "int32"
