@@ -31,7 +31,7 @@ RETURNING *;
 SELECT c.*
 FROM checkpoints c
 JOIN user_checkpoints uc ON c.id = uc.checkpoint_id 
-WHERE uc.user_id = $1
-    AND ($2::text IS NULL OR c.roadmap_id = $2)
-    AND ($3::text IS NULL OR c.status = $3)
+WHERE uc.user_id = sqlc.arg(user_id)
+  AND (sqlc.arg(roadmap_id) IS NULL OR c.roadmap_id = sqlc.arg(roadmap_id)::uuid)
+  AND (sqlc.arg(status) IS NULL OR c.status = sqlc.arg(status))
 ORDER BY c.position ASC;

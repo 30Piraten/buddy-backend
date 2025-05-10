@@ -141,19 +141,19 @@ SELECT c.id, c.roadmap_id, c.title, c.description, c.position, c.type, c.status,
 FROM checkpoints c
 JOIN user_checkpoints uc ON c.id = uc.checkpoint_id 
 WHERE uc.user_id = $1
-    AND ($2::text IS NULL OR c.roadmap_id = $2)
-    AND ($3::text IS NULL OR c.status = $3)
+  AND ($2 IS NULL OR c.roadmap_id = $2::uuid)
+  AND ($3 IS NULL OR c.status = $3)
 ORDER BY c.position ASC
 `
 
 type ListUserCheckpointsParams struct {
-	UserID  uuid.UUID `json:"user_id"`
-	Column2 string    `json:"column_2"`
-	Column3 string    `json:"column_3"`
+	UserID    uuid.UUID   `json:"user_id"`
+	RoadmapID interface{} `json:"roadmap_id"`
+	Status    interface{} `json:"status"`
 }
 
 func (q *Queries) ListUserCheckpoints(ctx context.Context, arg ListUserCheckpointsParams) ([]Checkpoint, error) {
-	rows, err := q.db.Query(ctx, listUserCheckpoints, arg.UserID, arg.Column2, arg.Column3)
+	rows, err := q.db.Query(ctx, listUserCheckpoints, arg.UserID, arg.RoadmapID, arg.Status)
 	if err != nil {
 		return nil, err
 	}
