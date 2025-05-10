@@ -1,59 +1,63 @@
 package utils
 
-import checkpointv1 "github.com/30Piraten/buddy-backend/gen/go/proto/checkpoints/v1"
+import (
+	"fmt"
 
-// Convert domain type string to proto enum
-func CheckpointTypeToProto(t string) checkpointv1.CheckpointType {
-	switch t {
-	case "LEARNING":
-		return checkpointv1.CheckpointType_CHECKPOINT_TYPE_TYPE_LEARNING
-	case "PRACTICE":
-		return checkpointv1.CheckpointType_CHECKPOINT_TYPE_TYPE_PRACTICE
-	case "ASSESSMENT":
-		return checkpointv1.CheckpointType_CHECKPOINT_TYPE_TYPE_ASSESSMENT
-	default:
-		return checkpointv1.CheckpointType_CHECKPOINT_TYPE_TYPE_UNSPECIFIED
-	}
+	checkpointv1 "github.com/30Piraten/buddy-backend/gen/go/proto/checkpoints/v1"
+)
+
+var protoDBType = map[checkpointv1.CheckpointType]string{
+	checkpointv1.CheckpointType_CHECKPOINT_TYPE_TYPE_ASSESSMENT: "ASSESSMENT",
+	checkpointv1.CheckpointType_CHECKPOINT_TYPE_TYPE_PRACTICE:   "PRACTICE",
+	checkpointv1.CheckpointType_CHECKPOINT_TYPE_TYPE_LEARNING:   "LEARNING",
 }
 
-// Convert domain status string to proto enum
-func CheckpointStatusToProto(s string) checkpointv1.CheckpointStatus {
-	switch s {
-	case "COMPLETED":
-		return checkpointv1.CheckpointStatus_CHECKPOINT_STATUS_STATUS_COMPLETED
-	case "PENDING":
-		return checkpointv1.CheckpointStatus_CHECKPOINT_STATUS_STATUS_PENDING
-	case "IN_PROGRESS":
-		return checkpointv1.CheckpointStatus_CHECKPOINT_STATUS_STATUS_IN_PROGRESS
-	default:
-		return checkpointv1.CheckpointStatus_CHECKPOINT_STATUS_STATUS_UNSPECIFIED
+func CheckpointTypeToDB(t checkpointv1.CheckpointType) (string, error) {
+	val, ok := protoDBType[t]
+	if !ok {
+		return "", fmt.Errorf("invalid checkpoint type: %v", t)
 	}
+	return val, nil
 }
 
-// For DB operations - Proto enum to string (original function kept)
-func CheckpointTypeToDB(t checkpointv1.CheckpointType) string {
-	switch t {
-	case checkpointv1.CheckpointType_CHECKPOINT_TYPE_TYPE_LEARNING:
-		return "LEARNING"
-	case checkpointv1.CheckpointType_CHECKPOINT_TYPE_TYPE_PRACTICE:
-		return "PRACTICE"
-	case checkpointv1.CheckpointType_CHECKPOINT_TYPE_TYPE_ASSESSMENT:
-		return "ASSESSMENT"
-	default:
-		return "UNSPECIFIED"
-	}
+var protoDBStatus = map[checkpointv1.CheckpointStatus]string{
+	checkpointv1.CheckpointStatus_CHECKPOINT_STATUS_STATUS_COMPLETED:   "COMPLETED",
+	checkpointv1.CheckpointStatus_CHECKPOINT_STATUS_STATUS_PENDING:     "PENDING",
+	checkpointv1.CheckpointStatus_CHECKPOINT_STATUS_STATUS_IN_PROGRESS: "IN_PROGRESS",
 }
 
-// For DB operations - Proto enum to string (original function kept)
-func CheckpointStatusToDB(t checkpointv1.CheckpointStatus) string {
-	switch t {
-	case checkpointv1.CheckpointStatus_CHECKPOINT_STATUS_STATUS_COMPLETED:
-		return "COMPLETED"
-	case checkpointv1.CheckpointStatus_CHECKPOINT_STATUS_STATUS_PENDING:
-		return "PENDING"
-	case checkpointv1.CheckpointStatus_CHECKPOINT_STATUS_STATUS_IN_PROGRESS:
-		return "IN_PROGRESS"
-	default:
-		return "UNSPECIFIED"
+func CheckpointStatusToDB(s checkpointv1.CheckpointStatus) (string, error) {
+	val, ok := protoDBStatus[s]
+	if !ok {
+		return "", fmt.Errorf("invalid checkpoint status: %v", s)
 	}
+	return val, nil
+}
+
+var protoToDBType = map[string]checkpointv1.CheckpointType{
+	"LEARNING":   checkpointv1.CheckpointType_CHECKPOINT_TYPE_TYPE_LEARNING,
+	"PRACTICE":   checkpointv1.CheckpointType_CHECKPOINT_TYPE_TYPE_PRACTICE,
+	"ASSESSMENT": checkpointv1.CheckpointType_CHECKPOINT_TYPE_TYPE_ASSESSMENT,
+}
+
+func CheckpointTypeFromDB(t string) (checkpointv1.CheckpointType, error) {
+	val, ok := protoToDBType[t]
+	if !ok {
+		return checkpointv1.CheckpointType_CHECKPOINT_TYPE_TYPE_UNSPECIFIED, fmt.Errorf("invalid DB type: %v", t)
+	}
+	return val, nil
+}
+
+var protoToDBStatus = map[string]checkpointv1.CheckpointStatus{
+	"COMPLETED":   checkpointv1.CheckpointStatus_CHECKPOINT_STATUS_STATUS_COMPLETED,
+	"PENDING":     checkpointv1.CheckpointStatus_CHECKPOINT_STATUS_STATUS_PENDING,
+	"IN_PROGRESS": checkpointv1.CheckpointStatus_CHECKPOINT_STATUS_STATUS_IN_PROGRESS,
+}
+
+func CheckpointStatusFromDB(s string) (checkpointv1.CheckpointStatus, error) {
+	val, ok := protoToDBStatus[s]
+	if !ok {
+		return checkpointv1.CheckpointStatus_CHECKPOINT_STATUS_STATUS_UNSPECIFIED, fmt.Errorf("invalid DB status: %v", s)
+	}
+	return val, nil
 }
