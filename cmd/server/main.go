@@ -14,7 +14,7 @@ import (
 	checkpointgen "github.com/30Piraten/buddy-backend/internal/db/checkpoints/checkpoint_generated"
 	roadmapgen "github.com/30Piraten/buddy-backend/internal/db/roadmaps/roadmap_generated"
 	usergen "github.com/30Piraten/buddy-backend/internal/db/users/user_generated"
-	"github.com/30Piraten/buddy-backend/internal/handlers/checkpoint"
+	"github.com/30Piraten/buddy-backend/internal/handlers/checkpoints"
 	"github.com/30Piraten/buddy-backend/internal/handlers/roadmap"
 	"github.com/30Piraten/buddy-backend/internal/handlers/users"
 	"github.com/joho/godotenv"
@@ -90,7 +90,7 @@ func main() {
 
 	// Users
 	userQueries := usergen.New(db)
-	userHandler := users.NewHandler(userQueries)
+	userHandler := users.NewUserHandler(userQueries)
 
 	// Roadmaps
 	roadmapQueries := roadmapgen.New(db)
@@ -98,7 +98,7 @@ func main() {
 
 	// Checkpoint
 	checkpointQueries := checkpointgen.New(db)
-	checkpointHandler := checkpoint.NewCheckpointHandler(checkpointQueries)
+	checkpointHandler := checkpoints.NewCheckpointHandler(checkpointQueries)
 
 	//
 
