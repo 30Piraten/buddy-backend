@@ -16,7 +16,7 @@ service RoadmapService {
 
 message Roadmap {
     string id = 1;
-    string owner_id = 2; 
+    string user_id = 2; 
     string title = 3;
     string description = 4; 
     bool is_public = 5;
@@ -27,7 +27,7 @@ message Roadmap {
 }
 
 message CreateRoadmapRequest {
-    string owner_id = 1; 
+    string user_id = 1; 
     string title = 2;
     string description = 3;
     bool is_public = 4;
@@ -46,7 +46,7 @@ message GetRoadmapResponse {
 }
 
 message ListRoadmapsRequest {
-    string owner_id = 1;
+    string user_id = 1;
     string title = 2;
     bool is_public = 3; 
 }
