@@ -1,7 +1,7 @@
 CREATE TABLE roadmaps (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   -- owner_id UUID REFERENCES users(id) ON DELETE CASCADE,
-  owner_id UUID NOT NULL,
+  user_id UUID NOT NULL,
   title TEXT NOT NULL,
   description TEXT,
   is_public BOOLEAN DEFAULT FALSE,

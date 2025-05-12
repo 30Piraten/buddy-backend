@@ -7,18 +7,19 @@ package roadmapgen
 
 import (
 	"context"
+	"time"
 
 	"github.com/google/uuid"
 )
 
 const createRoadmap = `-- name: CreateRoadmap :one
-INSERT INTO roadmaps (owner_id, title, description, is_public)
+INSERT INTO roadmaps (user_id, title, description, is_public)
 VALUES ($1, $2, $3, $4)
-RETURNING id, owner_id, title, description, is_public, category, tags, difficulty, created_at
+RETURNING id, user_id, title, description, is_public, category, tags, difficulty, created_at
 `
 
 type CreateRoadmapParams struct {
-	OwnerID     uuid.UUID `json:"owner_id"`
+	UserID      uuid.UUID `json:"user_id"`
 	Title       string    `json:"title"`
 	Description string    `json:"description"`
 	IsPublic    bool      `json:"is_public"`
@@ -26,7 +27,7 @@ type CreateRoadmapParams struct {
 
 func (q *Queries) CreateRoadmap(ctx context.Context, arg CreateRoadmapParams) (Roadmap, error) {
 	row := q.db.QueryRow(ctx, createRoadmap,
-		arg.OwnerID,
+		arg.UserID,
 		arg.Title,
 		arg.Description,
 		arg.IsPublic,
@@ -34,7 +35,7 @@ func (q *Queries) CreateRoadmap(ctx context.Context, arg CreateRoadmapParams) (R
 	var i Roadmap
 	err := row.Scan(
 		&i.ID,
-		&i.OwnerID,
+		&i.UserID,
 		&i.Title,
 		&i.Description,
 		&i.IsPublic,
@@ -49,7 +50,7 @@ func (q *Queries) CreateRoadmap(ctx context.Context, arg CreateRoadmapParams) (R
 const deleteRoadmap = `-- name: DeleteRoadmap :one
 DELETE FROM roadmaps 
 WHERE id = $1
-RETURNING id, owner_id, title, description, is_public, category, tags, difficulty, created_at
+RETURNING id, user_id, title, description, is_public, category, tags, difficulty, created_at
 `
 
 func (q *Queries) DeleteRoadmap(ctx context.Context, id uuid.UUID) (Roadmap, error) {
@@ -57,7 +58,7 @@ func (q *Queries) DeleteRoadmap(ctx context.Context, id uuid.UUID) (Roadmap, err
 	var i Roadmap
 	err := row.Scan(
 		&i.ID,
-		&i.OwnerID,
+		&i.UserID,
 		&i.Title,
 		&i.Description,
 		&i.IsPublic,
@@ -70,28 +71,34 @@ func (q *Queries) DeleteRoadmap(ctx context.Context, id uuid.UUID) (Roadmap, err
 }
 
 const getRoadmap = `-- name: GetRoadmap :one
-SELECT id, owner_id, title, description, is_public, category, tags, difficulty, created_at FROM roadmaps WHERE owner_id = $1
+SELECT id, user_id, title, description, created_at
+FROM roadmaps
+WHERE id = $1
 `
 
-func (q *Queries) GetRoadmap(ctx context.Context, ownerID uuid.UUID) (Roadmap, error) {
-	row := q.db.QueryRow(ctx, getRoadmap, ownerID)
-	var i Roadmap
+type GetRoadmapRow struct {
+	ID          uuid.UUID `json:"id"`
+	UserID      uuid.UUID `json:"user_id"`
+	Title       string    `json:"title"`
+	Description string    `json:"description"`
+	CreatedAt   time.Time `json:"created_at"`
+}
+
+func (q *Queries) GetRoadmap(ctx context.Context, id uuid.UUID) (GetRoadmapRow, error) {
+	row := q.db.QueryRow(ctx, getRoadmap, id)
+	var i GetRoadmapRow
 	err := row.Scan(
 		&i.ID,
-		&i.OwnerID,
+		&i.UserID,
 		&i.Title,
 		&i.Description,
-		&i.IsPublic,
-		&i.Category,
-		&i.Tags,
-		&i.Difficulty,
 		&i.CreatedAt,
 	)
 	return i, err
 }
 
 const listAllRoadmaps = `-- name: ListAllRoadmaps :many
-SELECT id, owner_id, title, description, is_public, category, tags, difficulty, created_at FROM roadmaps
+SELECT id, user_id, title, description, is_public, category, tags, difficulty, created_at FROM roadmaps
 `
 
 func (q *Queries) ListAllRoadmaps(ctx context.Context) ([]Roadmap, error) {
@@ -105,7 +112,7 @@ func (q *Queries) ListAllRoadmaps(ctx context.Context) ([]Roadmap, error) {
 		var i Roadmap
 		if err := rows.Scan(
 			&i.ID,
-			&i.OwnerID,
+			&i.UserID,
 			&i.Title,
 			&i.Description,
 			&i.IsPublic,
@@ -125,7 +132,7 @@ func (q *Queries) ListAllRoadmaps(ctx context.Context) ([]Roadmap, error) {
 }
 
 const listUserRoadmaps = `-- name: ListUserRoadmaps :many
-SELECT id, owner_id, title, description, is_public, category, tags, difficulty, created_at FROM roadmaps WHERE id = $1 ORDER BY created_at DESC
+SELECT id, user_id, title, description, is_public, category, tags, difficulty, created_at FROM roadmaps WHERE id = $1 ORDER BY created_at DESC
 `
 
 func (q *Queries) ListUserRoadmaps(ctx context.Context, id uuid.UUID) ([]Roadmap, error) {
@@ -139,7 +146,7 @@ func (q *Queries) ListUserRoadmaps(ctx context.Context, id uuid.UUID) ([]Roadmap
 		var i Roadmap
 		if err := rows.Scan(
 			&i.ID,
-			&i.OwnerID,
+			&i.UserID,
 			&i.Title,
 			&i.Description,
 			&i.IsPublic,
@@ -168,7 +175,7 @@ SET
     tags = $6,
     difficulty = $7
 WHERE id = $1
-RETURNING id, owner_id, title, description, is_public, category, tags, difficulty, created_at
+RETURNING id, user_id, title, description, is_public, category, tags, difficulty, created_at
 `
 
 type UpdateRoadmapParams struct {
@@ -194,7 +201,7 @@ func (q *Queries) UpdateRoadmap(ctx context.Context, arg UpdateRoadmapParams) (R
 	var i Roadmap
 	err := row.Scan(
 		&i.ID,
-		&i.OwnerID,
+		&i.UserID,
 		&i.Title,
 		&i.Description,
 		&i.IsPublic,

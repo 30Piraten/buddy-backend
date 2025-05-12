@@ -12,7 +12,7 @@ import (
 
 type Roadmap struct {
 	ID          uuid.UUID `json:"id"`
-	OwnerID     uuid.UUID `json:"owner_id"`
+	UserID      uuid.UUID `json:"user_id"`
 	Title       string    `json:"title"`
 	Description string    `json:"description"`
 	IsPublic    bool      `json:"is_public"`
