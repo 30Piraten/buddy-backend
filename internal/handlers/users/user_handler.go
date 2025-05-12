@@ -14,19 +14,19 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-type Handler struct {
+type UserHandler struct {
 	usersv1.UnimplementedUserServiceServer
 	db *usergen.Queries
 }
 
-func NewHandler(q *usergen.Queries) *Handler {
-	return &Handler{
+func NewUserHandler(q *usergen.Queries) *UserHandler {
+	return &UserHandler{
 		db: q,
 	}
 }
 
 // CreateUser creates a new user in the database
-func (h *Handler) CreateUser(ctx context.Context, req *usersv1.CreateUserRequest) (*usersv1.CreateUserResponse, error) {
+func (h *UserHandler) CreateUser(ctx context.Context, req *usersv1.CreateUserRequest) (*usersv1.CreateUserResponse, error) {
 	uid := uuid.New()
 
 	if req.Name == "" || req.Email == "" {
@@ -51,7 +51,7 @@ func (h *Handler) CreateUser(ctx context.Context, req *usersv1.CreateUserRequest
 }
 
 // GetUser
-func (h *Handler) GetUser(ctx context.Context, req *usersv1.GetUserRequest) (*usersv1.GetUserResponse, error) {
+func (h *UserHandler) GetUser(ctx context.Context, req *usersv1.GetUserRequest) (*usersv1.GetUserResponse, error) {
 	uid, err := uuid.Parse(req.Id)
 	if err != nil {
 		log.Error().Err(err).Msg("The UUID is invalid")
@@ -70,7 +70,7 @@ func (h *Handler) GetUser(ctx context.Context, req *usersv1.GetUserRequest) (*us
 
 }
 
-func (h *Handler) ListUsers(ctx context.Context, _ *emptypb.Empty) (*usersv1.ListUsersResponse, error) {
+func (h *UserHandler) ListUsers(ctx context.Context, _ *emptypb.Empty) (*usersv1.ListUsersResponse, error) {
 	users, err := h.db.ListAllUsers(ctx)
 	if err != nil {
 		log.Error().Err(err).Msg("Failed to list users")
