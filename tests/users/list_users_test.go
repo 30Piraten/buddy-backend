@@ -23,7 +23,7 @@ func TestListUsers(t *testing.T) {
 	tt.CreateTestUser(t, q, "yuri marthe")
 	tt.CreateTestUser(t, q, "stefan makel")
 
-	userLists, err := h.db.ListAllUsers(ctx)
+	userLists, err := h.db.ListUsers(ctx)
 	require.NoError(t, err)
 	require.True(t, len(userLists) >= 1)
 }

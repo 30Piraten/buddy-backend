@@ -24,10 +24,6 @@ func (h *UserHandler) CreateUser(ctx context.Context, params usergen.CreateUserP
 	return h.db.CreateUser(ctx, params)
 }
 
-func (h *UserHandler) GetUser(ctx context.Context, id uuid.UUID) (usergen.User, error) {
-	return h.db.GetUser(ctx, id)
-}
-
 func TestCreateUser(t *testing.T) {
 	ctx := context.Background()
 

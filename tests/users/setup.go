@@ -19,7 +19,7 @@ func SetupTestDB(t *testing.T, pool *pgxpool.Pool) (*usergen.Queries, pgx.Tx) {
 	defer cancel()
 
 	tx, err := pool.Begin(ctx)
-	require.NoError(t, err) // flagged!
+	require.NoError(t, err)
 
 	return usergen.New(tx), tx
 }
