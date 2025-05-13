@@ -7,5 +7,5 @@ RETURNING *;
 -- name: GetUser :one
 SELECT * FROM users WHERE id = $1;
 
--- name: ListAllUsers :many
+-- name: ListUsers :many
 SELECT * FROM users;
