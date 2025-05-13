@@ -35,18 +35,18 @@ migrate-up: check-db-env
 migrate-down: check-db-env
 	migrate -path migrations -database "$(POSTGRES_DSN)" down
 
-migrate-up-test-users: check-test-db-env
+migrate-test-up: check-test-db-env
 	migrate -path migrations -database "$(POSTGRES_TEST_DSN)" up 
 
-migrate-down-test-users: check-test-db-env
+migrate-test-down: check-test-db-env
 	migrate -path migrations -database "$(POSTGRES_TEST_DSN)" down
 
 # --- Database Seeding --- 
 db-seed: check-db-env
 	@echo "☘️ Seeding users, roadmaps, checkpoints"
-	psql $(POSTGRES_DSN) -f scripts/users.sql
-	psql $(POSTGRES_DSN) -f scripts/roadmap.sql
-	psql $(POSTGRES_DSN) -f scripts/checkpoints.sql
+	psql $(POSTGRES_DSN) -f seed/users.sql
+	psql $(POSTGRES_DSN) -f seed/roadmap.sql
+	psql $(POSTGRES_DSN) -f seed/checkpoints.sql
 	@echo "✅ Seed complete"
 
 # --- gRPC Testing ---
@@ -109,7 +109,7 @@ test-checkpoints:
 	go test -v ./tests/checkpoints/...
 
 test-roadmaps:
-	go test -v ./tests/roadmaps/...
+	go test -v ./tests/roadmap/...
 
 # --- Meta ---
 
