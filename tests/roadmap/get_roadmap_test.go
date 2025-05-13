@@ -21,10 +21,10 @@ func TestGetRoadmap(t *testing.T) {
 
 	h := NewRoadmapHandlers(db)
 
-	userID := uuid.New()
-	r := tt.InsertTestRoadmap(t, db, userID)
+	roadmapID := uuid.New()
+	r := tt.InsertTestRoadmap(t, db, roadmapID)
 
-	fetchedRoadmap, err := h.db.GetRoadmap(ctx, r.UserID)
+	fetched, err := h.db.GetRoadmap(ctx, r.ID)
 	require.NoError(t, err)
-	require.Equal(t, r.Title, fetchedRoadmap.Title)
+	require.Equal(t, r.Title, fetched.Title)
 }

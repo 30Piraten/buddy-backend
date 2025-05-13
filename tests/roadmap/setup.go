@@ -39,6 +39,9 @@ func InsertTestRoadmap(t *testing.T, db *roadmapgen.Queries, userID uuid.UUID) r
 		Title:       "First Roadmap",
 		Description: "Generated first roadmap in test",
 		IsPublic:    true,
+		Category:    "Love",
+		Tags:        []string{"spiritual", "peace", "survival"},
+		Difficulty:  "Complex",
 	})
 	require.NoError(t, err)
 	return r
