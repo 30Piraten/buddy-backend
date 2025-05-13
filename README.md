@@ -1,4 +1,4 @@
-# 📘 Phase 1 Documentation: Backend Foundations (System of Record)
+# 📘 Phase 1 Documentation: Backend Foundations
 
 ## 🧭 Overview
 
