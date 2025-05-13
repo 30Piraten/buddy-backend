@@ -1,6 +1,6 @@
 -- name: CreateRoadmap :one
-INSERT INTO roadmaps (user_id, title, description, is_public)
-VALUES ($1, $2, $3, $4)
+INSERT INTO roadmaps (user_id, title, description, is_public, category, tags, difficulty)
+VALUES ($1, $2, $3, $4, $5, $6, $7)
 RETURNING *; 
 
 -- name: GetRoadmap :one
