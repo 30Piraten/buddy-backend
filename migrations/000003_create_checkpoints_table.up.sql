@@ -9,4 +9,4 @@ CREATE TABLE IF NOT EXISTS checkpoints(
   estimated_time INT, 
   reward_points INT,
   created_at TIMESTAMPTZ DEFAULT NOW()
-)
+);

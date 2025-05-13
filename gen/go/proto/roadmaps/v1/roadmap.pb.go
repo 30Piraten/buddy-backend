@@ -25,7 +25,7 @@ const (
 type Roadmap struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	OwnerId       string                 `protobuf:"bytes,2,opt,name=owner_id,json=ownerId,proto3" json:"owner_id,omitempty"`
+	UserId        string                 `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	Title         string                 `protobuf:"bytes,3,opt,name=title,proto3" json:"title,omitempty"`
 	Description   string                 `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`
 	IsPublic      bool                   `protobuf:"varint,5,opt,name=is_public,json=isPublic,proto3" json:"is_public,omitempty"`
@@ -74,9 +74,9 @@ func (x *Roadmap) GetId() string {
 	return ""
 }
 
-func (x *Roadmap) GetOwnerId() string {
+func (x *Roadmap) GetUserId() string {
 	if x != nil {
-		return x.OwnerId
+		return x.UserId
 	}
 	return ""
 }
@@ -132,10 +132,13 @@ func (x *Roadmap) GetCreatedAt() *timestamppb.Timestamp {
 
 type CreateRoadmapRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	OwnerId       string                 `protobuf:"bytes,1,opt,name=owner_id,json=ownerId,proto3" json:"owner_id,omitempty"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	Title         string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
 	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
 	IsPublic      bool                   `protobuf:"varint,4,opt,name=is_public,json=isPublic,proto3" json:"is_public,omitempty"`
+	Category      string                 `protobuf:"bytes,5,opt,name=category,proto3" json:"category,omitempty"`
+	Tags          []string               `protobuf:"bytes,6,rep,name=tags,proto3" json:"tags,omitempty"`
+	Difficulty    string                 `protobuf:"bytes,7,opt,name=difficulty,proto3" json:"difficulty,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -170,9 +173,9 @@ func (*CreateRoadmapRequest) Descriptor() ([]byte, []int) {
 	return file_proto_roadmaps_v1_roadmap_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *CreateRoadmapRequest) GetOwnerId() string {
+func (x *CreateRoadmapRequest) GetUserId() string {
 	if x != nil {
-		return x.OwnerId
+		return x.UserId
 	}
 	return ""
 }
@@ -196,6 +199,27 @@ func (x *CreateRoadmapRequest) GetIsPublic() bool {
 		return x.IsPublic
 	}
 	return false
+}
+
+func (x *CreateRoadmapRequest) GetCategory() string {
+	if x != nil {
+		return x.Category
+	}
+	return ""
+}
+
+func (x *CreateRoadmapRequest) GetTags() []string {
+	if x != nil {
+		return x.Tags
+	}
+	return nil
+}
+
+func (x *CreateRoadmapRequest) GetDifficulty() string {
+	if x != nil {
+		return x.Difficulty
+	}
+	return ""
 }
 
 type CreateRoadmapResponse struct {
@@ -332,7 +356,7 @@ func (x *GetRoadmapResponse) GetRoadmap() *Roadmap {
 
 type ListRoadmapsRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	OwnerId       string                 `protobuf:"bytes,1,opt,name=owner_id,json=ownerId,proto3" json:"owner_id,omitempty"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	Title         string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
 	IsPublic      bool                   `protobuf:"varint,3,opt,name=is_public,json=isPublic,proto3" json:"is_public,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -369,9 +393,9 @@ func (*ListRoadmapsRequest) Descriptor() ([]byte, []int) {
 	return file_proto_roadmaps_v1_roadmap_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *ListRoadmapsRequest) GetOwnerId() string {
+func (x *ListRoadmapsRequest) GetUserId() string {
 	if x != nil {
-		return x.OwnerId
+		return x.UserId
 	}
 	return ""
 }
@@ -662,10 +686,10 @@ var File_proto_roadmaps_v1_roadmap_proto protoreflect.FileDescriptor
 
 const file_proto_roadmaps_v1_roadmap_proto_rawDesc = "" +
 	"\n" +
-	"\x1fproto/roadmaps/v1/roadmap.proto\x12\x11proto.roadmaps.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\x92\x02\n" +
+	"\x1fproto/roadmaps/v1/roadmap.proto\x12\x11proto.roadmaps.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\x90\x02\n" +
 	"\aRoadmap\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x19\n" +
-	"\bowner_id\x18\x02 \x01(\tR\aownerId\x12\x14\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x17\n" +
+	"\auser_id\x18\x02 \x01(\tR\x06userId\x12\x14\n" +
 	"\x05title\x18\x03 \x01(\tR\x05title\x12 \n" +
 	"\vdescription\x18\x04 \x01(\tR\vdescription\x12\x1b\n" +
 	"\tis_public\x18\x05 \x01(\bR\bisPublic\x12\x1a\n" +
@@ -673,21 +697,26 @@ const file_proto_roadmaps_v1_roadmap_proto_rawDesc = "" +
 	"\x04tags\x18\a \x03(\tR\x04tags\x12\x1c\n" +
 	"\tdifficult\x18\b \x01(\tR\tdifficult\x129\n" +
 	"\n" +
-	"created_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\x86\x01\n" +
-	"\x14CreateRoadmapRequest\x12\x19\n" +
-	"\bowner_id\x18\x01 \x01(\tR\aownerId\x12\x14\n" +
+	"created_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\"\xd4\x01\n" +
+	"\x14CreateRoadmapRequest\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x14\n" +
 	"\x05title\x18\x02 \x01(\tR\x05title\x12 \n" +
 	"\vdescription\x18\x03 \x01(\tR\vdescription\x12\x1b\n" +
-	"\tis_public\x18\x04 \x01(\bR\bisPublic\"M\n" +
+	"\tis_public\x18\x04 \x01(\bR\bisPublic\x12\x1a\n" +
+	"\bcategory\x18\x05 \x01(\tR\bcategory\x12\x12\n" +
+	"\x04tags\x18\x06 \x03(\tR\x04tags\x12\x1e\n" +
+	"\n" +
+	"difficulty\x18\a \x01(\tR\n" +
+	"difficulty\"M\n" +
 	"\x15CreateRoadmapResponse\x124\n" +
 	"\aroadmap\x18\x01 \x01(\v2\x1a.proto.roadmaps.v1.RoadmapR\aroadmap\"2\n" +
 	"\x11GetRoadmapRequest\x12\x1d\n" +
 	"\n" +
 	"roadmap_id\x18\x01 \x01(\tR\troadmapId\"J\n" +
 	"\x12GetRoadmapResponse\x124\n" +
-	"\aroadmap\x18\x01 \x01(\v2\x1a.proto.roadmaps.v1.RoadmapR\aroadmap\"c\n" +
-	"\x13ListRoadmapsRequest\x12\x19\n" +
-	"\bowner_id\x18\x01 \x01(\tR\aownerId\x12\x14\n" +
+	"\aroadmap\x18\x01 \x01(\v2\x1a.proto.roadmaps.v1.RoadmapR\aroadmap\"a\n" +
+	"\x13ListRoadmapsRequest\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x14\n" +
 	"\x05title\x18\x02 \x01(\tR\x05title\x12\x1b\n" +
 	"\tis_public\x18\x03 \x01(\bR\bisPublic\"N\n" +
 	"\x14ListRoadmapsResponse\x126\n" +
