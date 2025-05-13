@@ -13,8 +13,8 @@ import (
 )
 
 const createRoadmap = `-- name: CreateRoadmap :one
-INSERT INTO roadmaps (user_id, title, description, is_public)
-VALUES ($1, $2, $3, $4)
+INSERT INTO roadmaps (user_id, title, description, is_public, category, tags, difficulty)
+VALUES ($1, $2, $3, $4, $5, $6, $7)
 RETURNING id, user_id, title, description, is_public, category, tags, difficulty, created_at
 `
 
@@ -23,6 +23,9 @@ type CreateRoadmapParams struct {
 	Title       string    `json:"title"`
 	Description string    `json:"description"`
 	IsPublic    bool      `json:"is_public"`
+	Category    string    `json:"category"`
+	Tags        []string  `json:"tags"`
+	Difficulty  string    `json:"difficulty"`
 }
 
 func (q *Queries) CreateRoadmap(ctx context.Context, arg CreateRoadmapParams) (Roadmap, error) {
@@ -31,6 +34,9 @@ func (q *Queries) CreateRoadmap(ctx context.Context, arg CreateRoadmapParams) (R
 		arg.Title,
 		arg.Description,
 		arg.IsPublic,
+		arg.Category,
+		arg.Tags,
+		arg.Difficulty,
 	)
 	var i Roadmap
 	err := row.Scan(
