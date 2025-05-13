@@ -2,7 +2,6 @@ package roadmap
 
 import (
 	"context"
-	"database/sql"
 	"testing"
 	"time"
 
@@ -25,9 +24,9 @@ func SetupTestDB(t *testing.T, pool *pgxpool.Pool) (*roadmapgen.Queries, pgx.Tx)
 }
 
 // CleanupTestDB rolls back the transaction to clean up test data
-func CleanupTestDB(t *testing.T, tx *sql.Tx) {
-	err := tx.Rollback()
-	require.NoError(t, err, "Failed to rollback transaction")
+func CleanupTestDB(t *testing.T, tx pgx.Tx) {
+	err := tx.Rollback(context.Background())
+	require.NoError(t, err)
 }
 
 func InsertTestRoadmap(t *testing.T, db *roadmapgen.Queries, userID uuid.UUID) roadmapgen.Roadmap {
