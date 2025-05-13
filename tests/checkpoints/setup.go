@@ -2,7 +2,6 @@ package checkpoints
 
 import (
 	"context"
-	"database/sql"
 	"testing"
 	"time"
 
@@ -23,8 +22,9 @@ func SetupTestDB(t *testing.T, pool *pgxpool.Pool) (*checkpointgen.Queries, pgx.
 	return checkpointgen.New(tx), tx
 }
 
-func CleanupTestDB(t *testing.T, tx *sql.Tx) {
-	require.NoError(t, tx.Rollback())
+func CleanupTestDB(t *testing.T, tx pgx.Tx) {
+	err := tx.Rollback(context.Background())
+	require.NoError(t, err)
 }
 
 func InsertTestCheckpoint(t *testing.T, db *checkpointgen.Queries, userID uuid.UUID) checkpointgen.Checkpoint {
