@@ -10,7 +10,6 @@ import (
 	"github.com/rs/zerolog/log"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -70,8 +69,9 @@ func (h *UserHandler) GetUser(ctx context.Context, req *usersv1.GetUserRequest) 
 
 }
 
-func (h *UserHandler) ListUsers(ctx context.Context, _ *emptypb.Empty) (*usersv1.ListUsersResponse, error) {
-	users, err := h.db.ListAllUsers(ctx)
+// TODO: 1
+func (h *UserHandler) ListUsers(ctx context.Context, req *usersv1.ListUserRequest) (*usersv1.ListUsersResponse, error) {
+	users, err := h.db.ListUsers(ctx)
 	if err != nil {
 		log.Error().Err(err).Msg("Failed to list users")
 		return nil, err
@@ -95,3 +95,7 @@ func convertToProto(u usergen.User) *usersv1.User {
 		CreatedAt: timestamppb.New(u.CreatedAt),
 	}
 }
+
+// Delete user
+
+// Update user

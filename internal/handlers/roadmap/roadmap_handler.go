@@ -39,6 +39,9 @@ func (h *RoadmapHandler) CreateRoadmap(ctx context.Context, req *roadmapv1.Creat
 		Title:       req.Title,
 		Description: req.Description,
 		IsPublic:    req.IsPublic,
+		Category:    req.Category,
+		Tags:        req.Tags,
+		Difficulty:  req.Difficulty,
 	})
 
 	if err != nil {
