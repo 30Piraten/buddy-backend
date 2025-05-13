@@ -34,10 +34,12 @@ func InsertTestCheckpoint(t *testing.T, db *checkpointgen.Queries, userID uuid.U
 	cp, err := db.CreateCheckpoint(ctx, checkpointgen.CreateCheckpointParams{
 		RoadmapID:     userID,
 		Title:         "First Checkpoint",
-		Type:          "",
-		Status:        "",
+		Type:          "ASSESSMENT",
+		Status:        "COMPLETED",
+		Position:      12,
 		Description:   "Auto-generated checkpoint",
 		EstimatedTime: int32(time.Now().AddDate(0, 0, 7).Unix()),
+		RewardPoints:  34,
 	})
 	require.NoError(t, err)
 	return cp

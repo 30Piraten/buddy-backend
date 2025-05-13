@@ -23,8 +23,7 @@ func TestGetCheckpoint(t *testing.T) {
 
 	checkpointID := uuid.New()
 
-	checkpoint := ch.InsertTestCheckpoint(t, db, checkpointID)
-	cp := ch.InsertTestCheckpoint(t, db, checkpoint.ID)
+	cp := ch.InsertTestCheckpoint(t, db, checkpointID)
 
 	found, err := h.db.GetCheckpoint(ctx, cp.ID)
 	require.NoError(t, err)
