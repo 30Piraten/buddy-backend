@@ -31,6 +31,9 @@ message CreateRoadmapRequest {
     string title = 2;
     string description = 3;
     bool is_public = 4;
+    string category = 5;
+    repeated string tags = 6; 
+    string difficulty = 7;
 }
 
 message CreateRoadmapResponse {

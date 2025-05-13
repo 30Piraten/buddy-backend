@@ -17,7 +17,9 @@ message User {
 service UserService {
     rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
     rpc GetUser(GetUserRequest) returns (GetUserResponse);
-    rpc ListUsers(google.protobuf.Empty) returns (ListUsersResponse);
+    rpc ListUsers(ListUserRequest) returns (ListUsersResponse);
+    // rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse);
+    // rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse);
 }
 
 message CreateUserRequest {
@@ -38,10 +40,11 @@ message GetUserResponse {
     User user = 1;
 }
 
-// message ListUserRequest {
-//     int32 page = 1;
-//     int32 page_size = 2;
-// }
+// TODO: 1
+message ListUserRequest {
+    int32 page = 1;
+    int32 page_size = 2;
+}
 
 message ListUsersResponse {
     repeated User users = 1;
