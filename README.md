@@ -4,8 +4,6 @@
 
 Phase 1 of buddy.me focused on building the **system of record**—the core backend foundation modeling users, roadmaps, and checkpoints. The priority was simplicity: to get records that work and are easily testable. Modifications can be applied at a later statge. Phase 1 will also lay the groundwork for RHIA and user-facing logic.
 
-## 
-
 ![backend sample](new.gif)
 
 ---
@@ -135,8 +133,7 @@ message Checkpoint {
 
 To be placed under `docs/`:
 
-* `docs/PHASE1_OVERVIEW.md` (this document)
-* `docs/users/README.md` (protobuf + handler + test breakdown)
+* [`docs/users/README.md`](./docs/users/README.md) => (protobuf + handler + test breakdown)
 * `docs/roadmaps/README.md`
 * `docs/checkpoints/README.md`
 * ERD diagram
