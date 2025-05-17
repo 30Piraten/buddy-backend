@@ -239,7 +239,7 @@ func TestCreateUser(t *testing.T) {
 
 | Practice            | Benefit                      |
 | ------------------- | ---------------------------- |
-| ✅ `sql.Tx` rollback | Isolated DB state per test   |
+| ✅ `pgx.Tx` rollback | Isolated DB state per test   |
 | ✅ No gRPC boot      | Fast execution               |
 | ✅ `require.*`       | Clear, fail-fast test output |
 
@@ -250,7 +250,9 @@ func TestCreateUser(t *testing.T) {
 Example usage of CLI testing via `grpcurl`:
 
 ```bash
-grpcurl -plaintext -d '{"email":"alice@buddy.me", "name":"Alice"}' localhost:50051 users.v1.UserService/CreateUser
+make run # runs gRPC server on port 9090
+
+grpcurl -plaintext -d '{"email":"alice@buddy.me", "name":"Alice"}' localhost:9090 proto.users.v1.UserService/CreateUser
 ```
 
 ```json
