@@ -1,7 +1,3 @@
-![backend sample](new.gif)
-
----
-
 # Buddy.me Backend
 
 The backend for Buddy.me: a Go gRPC service backed by PostgreSQL that serves as the system of record for users, roadmaps, and checkpoints.
