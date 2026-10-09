@@ -1,533 +1,270 @@
 # Buddy.me Backend
 
-The backend for Buddy.me: a Go gRPC service backed by PostgreSQL that serves as the system of record for users, roadmaps, and checkpoints.
+The data foundation behind Buddy.me, written in Go: users, roadmaps and checkpoints, served over gRPC and backed by PostgreSQL.
 
-![Buddy backend demo](new.gif)
+![Terminal demo: seeding the database with make db-seed, then fetching the first user with grpcurl](new.gif)
 
-[Learn more about Buddy.me](https://rayvah.cc/buddy)
+## What is Buddy.me?
 
-## Contents
+Buddy.me pairs two people around a shared goal. Instead of matching on likes and bios, it watches how people move through a structured journey, called a **roadmap**, and infers who would make a good walking partner. Each roadmap is a series of **checkpoints**, and each checkpoint is a chance to learn something about how you work.
 
-- [What Buddy.me is](#what-buddyme-is)
-- [Architecture](#architecture)
-- [Technology stack](#technology-stack)
-- [Repository structure](#repository-structure)
-- [API and service structure](#api-and-service-structure)
-- [Getting started](#getting-started)
-- [Development workflow](#development-workflow)
-- [Testing](#testing)
-- [Interacting with the API using grpcurl](#interacting-with-the-api-using-grpcurl)
-- [Database and migrations](#database-and-migrations)
-- [Project status](#project-status)
-- [Further documentation](#further-documentation)
-- [License](#license)
+This repository is the backend that stores all of that. It is also the groundwork for the [Rabbit-Hole Inference Algorithm (RHIA)](https://rayvah.cc/posts/rabbit-hole-interface-system), the part of Buddy.me that turns progress into matches. If you'd like the full story first, start with [what, why and how](https://rayvah.cc/posts/buddy-me-intro-what-why-how).
 
-## What Buddy.me is
+## Quick start
 
-Buddy.me is a progress-driven personal growth platform. Instead of offering open-ended choices, it guides users through **roadmaps**: structured, system-authored curricula made up of ordered **checkpoints**. Users advance through a roadmap and can skip checkpoints, which behave like optional modules. The model is similar to language-learning apps: shared structure, individual progress.
-
-This repository contains the backend. Phase 1, *Backend Foundations*, builds the core data layer that models:
-
-- **Users**: individual accounts and identity.
-- **Roadmaps**: system-authored curricula that users cannot edit.
-- **Checkpoints**: ordered steps within a roadmap.
-
-Phase 1 also lays the groundwork for **RHIA**, the downstream component that will consume progress events (for example, a completed checkpoint) and drive user-facing logic in Phase 2.
-
-### Design principles
-
-- **Simple and testable first.** Phase 1 favors records that work and are easy to verify. Refinements follow in later phases.
-- **Contract first.** Protobuf definitions, versioned under `v1`, are the source of truth for every API.
-- **Typed SQL over an ORM.** Queries are written in SQL and compiled to type-safe Go with sqlc.
-- **Progress over preference.** Roadmaps and checkpoints are not user-editable, which keeps shared progress consistent.
-- **Intent-first APIs.** Endpoints reflect product intent rather than exposing raw tables.
-
-## Architecture
-
-```mermaid
-flowchart LR
-    C["gRPC client<br/>(grpcurl, services, admin tools)"] -->|"Protobuf over gRPC :9090"| S["gRPC server<br/>cmd/server"]
-    S --> H["Handlers<br/>validation, UUID parsing, proto mapping"]
-    H --> Q["sqlc-generated queries<br/>(pgx v5)"]
-    Q --> D[("PostgreSQL")]
-    M["golang-migrate<br/>migrations/"] -->|"applies schema"| D
-    H -.->|"Phase 2: events"| R["RHIA"]
-```
-
-### Request lifecycle
-
-1. A client calls an RPC on the gRPC server (default port `9090`).
-2. The module's handler validates the request and parses identifiers into UUIDs.
-3. The handler calls a sqlc-generated query method.
-4. The query runs against PostgreSQL through pgx.
-5. The handler maps the database model to a Protobuf message and returns it in a response envelope.
-
-### Layering
-
-Each module follows the same strict layering: **proto ↔ handler ↔ sqlc ↔ database**. Handlers contain no SQL, and generated query code contains no business logic. Every module (users, roadmaps, checkpoints) repeats this pattern, which keeps the codebase predictable as it grows.
-
-## Technology stack
-
-| Area | Technology | Notes |
-| --- | --- | --- |
-| Language | Go 1.23.4 | Module: `github.com/30Piraten/buddy-backend` |
-| Transport | gRPC (`google.golang.org/grpc` v1.72.0) | Contract-based APIs |
-| Contracts | Protocol Buffers (`google.golang.org/protobuf` v1.36.6) | Versioned under `proto/<module>/v1`; generated with `buf` |
-| Database | PostgreSQL | System of record |
-| Driver | `pgx` v5.7.4 | Used as sqlc's `sql_package` |
-| Queries | sqlc | Typed Go bindings generated from SQL |
-| Migrations | golang-migrate CLI | Plain SQL files in `migrations/` |
-| Identifiers | `google/uuid` v1.6.0 | UUIDs for all primary keys |
-| Logging | zerolog v1.34.0 | Structured logging |
-| Configuration | `.env` + `godotenv` v1.5.1 | Loaded by the Makefile and the application |
-| Testing | `testify` v1.9.0, `pgx` transactions | Table-driven tests with rollback isolation |
-| Tooling | Make, grpcurl, psql, buf | Reproducible local workflow |
-| CI | GitHub Actions | Workflow definitions in `.github/workflows` |
-
-## Repository structure
-
-```text
-.
-├── cmd/server/          # gRPC server entry point (main.go)
-├── internal/
-│   └── db/
-│       ├── users/       # user_schema.sql, user_query.sql, user_generated/ (package usergen)
-│       ├── roadmaps/    # roadmap_schema.sql, roadmap_query.sql, roadmap_generated/ (package roadmapgen)
-│       └── checkpoints/ # checkpoint_schema.sql, checkpoint_query.sql, checkpoint_generated/ (package checkpointgen)
-├── proto/               # Protobuf service contracts, one directory per module (v1)
-├── gen/go/proto/        # Generated Go code for the contracts (output of buf)
-├── migrations/          # SQL migrations applied with golang-migrate
-├── seed/                # users.sql, roadmap.sql, checkpoints.sql
-├── tests/               # users/, roadmap/, checkpoints/
-├── utils/               # Shared utilities
-├── docs/users/          # Users module deep dive
-├── .github/workflows/   # CI definitions
-├── buf.yaml             # buf module configuration
-├── buf.gen.yaml         # Code generation plugins and output paths
-├── sqlc.yaml            # sqlc configuration for all modules
-├── Makefile             # Run, migrate, seed, test, and grpcurl targets
-└── go.mod
-```
-
-Handlers and the database layer both live under `internal/`, so they are not importable from outside this module.
-
-## API and service structure
-
-The server exposes one gRPC service per module. All services use the `v1` API version and wrap results in `*Response` messages, which leaves room for error metadata and pagination without breaking clients.
-
-| Module | Service | Package | RPCs |
-| --- | --- | --- | --- |
-| Users | `UserService` | `proto.users.v1` | `CreateUser`, `GetUser`, `ListUsers` |
-| Roadmaps | `RoadmapService` | `proto.roadmaps.v1` | `CreateRoadmap`, `GetRoadmap`, `ListRoadmaps`, `DeleteRoadmap` |
-| Checkpoints | `CheckpointService` | `proto.checkpoints.v1` | `CreateCheckpoint`, `GetCheckpoint`, `ListCheckpoints`, `DeleteCheckpoint` |
-| Events | Not implemented | n/a | Placeholder schema for Phase 2 |
-
-Fully qualified method names take the form `<package>.<Service>/<Method>`, for example `proto.users.v1.UserService/GetUser`.
-
-### Conventions
-
-- **Identifiers** are UUID strings.
-- **Timestamps** use `google.protobuf.Timestamp`. grpcurl renders them in RFC 3339 format with camelCase field names (for example, `createdAt`).
-- **Responses** are wrapped in a message envelope such as `GetUserResponse`.
-- **Authoring rules.** Roadmaps and checkpoints are system-authored and have no update RPC. Users cannot modify or delete them.
-
-### Users
-
-The foundational identity layer and the root for roadmap assignment and checkpoint progress.
-
-| RPC | Request fields | Behavior |
-| --- | --- | --- |
-| `CreateUser` | `email`, `name`, `handle` (reserved) | Validates input, generates the UUID and creation timestamp, and stores the user |
-| `GetUser` | `id` | Returns the user, or an error if the ID is invalid or not found |
-| `ListUsers` | `page`, `page_size` | Returns all users. Pagination fields are defined but not yet applied |
-
-A user has an `id`, `name`, `email`, and `created_at`. `UpdateUser` and `DeleteUser` are deferred to Phase 2, pending decisions on account recovery, soft deletion, and GDPR-aligned data retention.
-
-### Roadmaps
-
-System-authored curriculum scaffolding that provides shared structure for progress.
-
-| RPC | Request fields |
-| --- | --- |
-| `CreateRoadmap` | See `proto/roadmaps/v1` |
-| `GetRoadmap` | `roadmap_id` |
-| `ListRoadmaps` | See `proto/roadmaps/v1` |
-| `DeleteRoadmap` | See `proto/roadmaps/v1` |
-
-### Checkpoints
-
-Ordered steps that belong to a roadmap. Users can skip checkpoints, but cannot modify or delete them.
-
-| RPC | Request fields |
-| --- | --- |
-| `CreateCheckpoint` | See `proto/checkpoints/v1` |
-| `GetCheckpoint` | `checkpoint_id` |
-| `ListCheckpoints` | See `proto/checkpoints/v1` |
-| `DeleteCheckpoint` | See `proto/checkpoints/v1` |
-
-For complete message definitions, the `.proto` files under `proto/` are the source of truth.
-
-## Getting started
-
-### Prerequisites
-
-| Tool | Purpose |
-| --- | --- |
-| Go 1.23.4 or later | Build and run the server |
-| PostgreSQL | Primary datastore, plus a second database for tests |
-| `psql` | Seeding and the Makefile's ID lookups |
-| [golang-migrate](https://github.com/golang-migrate/migrate) CLI | Apply migrations |
-| [grpcurl](https://github.com/fullstorydev/grpcurl) | Call the API from the command line |
-| [buf](https://buf.build) and [sqlc](https://sqlc.dev) | Only needed to regenerate code |
-
-Install the Go-based tools:
+You'll need Go 1.23.4 or newer, PostgreSQL, `psql`, and the [golang-migrate](https://github.com/golang-migrate/migrate) and [grpcurl](https://github.com/fullstorydev/grpcurl) CLIs.
 
 ```bash
-go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
-go install github.com/fullstorydev/grpcurl/cmd/grpcurl@latest
-go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
-go install github.com/bufbuild/buf/cmd/buf@latest
-go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
-go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
-```
+git clone https://github.com/30Piraten/buddy-backend.git
+cd buddy-backend
 
-### Setup
+# 1. Tell the app where Postgres lives (the Makefile reads .env too)
+cat > .env <<'ENV'
+POSTGRES_DSN=postgres://<user>:<password>@localhost:5432/buddy?sslmode=disable
+POSTGRES_TEST_DSN=postgres://<user>:<password>@localhost:5432/buddy_test?sslmode=disable
+ENV
 
-1. Clone the repository and download dependencies.
-
-   ```bash
-   git clone https://github.com/30Piraten/buddy-backend.git
-   cd buddy-backend
-   go mod download
-   ```
-
-2. Create a `.env` file in the repository root. The Makefile loads it automatically. Replace the placeholders with your own credentials, and never commit them.
-
-   ```bash
-   POSTGRES_DSN=postgres://<user>:<password>@localhost:5432/buddy?sslmode=disable
-   POSTGRES_TEST_DSN=postgres://<user>:<password>@localhost:5432/buddy_test?sslmode=disable
-   ```
-
-3. Create the development and test databases. The names must match your DSNs.
-
-   ```bash
-   createdb buddy
-   createdb buddy_test
-   ```
-
-4. Apply the migrations to both databases.
-
-   ```bash
-   make migrate-up
-   make migrate-test-up
-   ```
-
-5. Seed the development database with sample users, roadmaps, and checkpoints.
-
-   ```bash
-   make db-seed
-   ```
-
-6. Start the server. It listens on port `9090`.
-
-   ```bash
-   make run
-   ```
-
-7. In a second terminal, confirm the service responds.
-
-   ```bash
-   make first-user
-   ```
-
-### Makefile targets
-
-| Target | Description |
-| --- | --- |
-| `make run` | Start the gRPC server (`go run cmd/server/main.go`) |
-| `make migrate-up` / `make migrate-down` | Apply or revert migrations on the development database |
-| `make migrate-test-up` / `make migrate-test-down` | Apply or revert migrations on the test database |
-| `make db-seed` | Load `seed/users.sql`, `seed/roadmap.sql`, and `seed/checkpoints.sql` |
-| `make test` | Run all tests under `./tests/...` |
-| `make test-users`, `make test-roadmaps`, `make test-checkpoints` | Run one module's tests |
-| `make first-user`, `make first-roadmap`, `make first-checkpoint` | Fetch the first record of each type through gRPC |
-| `make fetch-all-users`, `make fetch-all-roadmaps`, `make fetch-all-checkpoints` | Fetch every record of each type through gRPC |
-
-Targets that touch the database fail fast with a clear message if `POSTGRES_DSN` or `POSTGRES_TEST_DSN` is not set.
-
-## Development workflow
-
-A typical change moves through the layers from the outside in:
-
-1. **Define the contract.** Edit or add a `.proto` file under `proto/<module>/v1/`, then regenerate Go code:
-
-   ```bash
-   buf lint
-   buf generate
-   ```
-
-   Generated files are written to `gen/go` with source-relative paths.
-
-2. **Change the schema.** Add a migration under `migrations/` (see [Database and migrations](#database-and-migrations)) and update the module's `*_schema.sql` so sqlc sees the same schema.
-
-3. **Write the queries.** Add or edit named queries in the module's `*_query.sql`, then regenerate:
-
-   ```bash
-   sqlc generate
-   ```
-
-4. **Implement the handler.** Validate input, convert identifiers, call the generated query method, and map the result to a Protobuf message.
-
-5. **Test.** Add table-driven tests under `tests/<module>/` and run `make test`.
-
-6. **Verify through the API.** Start the server with `make run` and exercise the new RPC with grpcurl.
-
-### Adding a new module
-
-1. Create `proto/<module>/v1/<module>.proto` and run `buf generate`.
-2. Create `internal/db/<module>/` with a schema file and a query file.
-3. Add a matching entry to `sqlc.yaml` and run `sqlc generate`.
-4. Add a migration for the new tables.
-5. Implement the handler and register the service in `cmd/server`.
-6. Add tests under `tests/<module>/` and Makefile targets for them.
-
-### Conventions
-
-- Keep SQL in `.sql` files. Handlers call generated methods only.
-- Use `uuid.Parse` to validate incoming identifiers and return an error for malformed values.
-- Log with zerolog using structured fields.
-- Keep API changes backward compatible within `v1`.
-
-## Testing
-
-Tests run against a real PostgreSQL database, not mocks, and are isolated by transactions.
-
-| Practice | Benefit |
-| --- | --- |
-| `pgx.Tx` rollback | Each test runs in a transaction that is rolled back, so no state leaks between tests |
-| Table-driven style | Reusable helpers, clean assertions, and explicit edge cases |
-| Timeout contexts | Prevents hung tests and shortens feedback loops |
-| Handler-level tests | No gRPC server boot, so tests execute quickly |
-| `require.*` assertions | Fail-fast, readable output |
-| grpcurl verification | Confirms the interface contract manually and in scripts |
-
-### Run the tests
-
-Apply migrations to the test database once, then run the suite:
-
-```bash
+# 2. Create the databases and apply the schema
+createdb buddy && createdb buddy_test
+make migrate-up
 make migrate-test-up
-make test
+
+# 3. Add sample data, then start the server on :9090
+make db-seed
+make run
 ```
 
-Run a single module or a single test:
-
-```bash
-make test-users
-go test -v ./tests/users/... -run TestCreateUser
-```
-
-### Example
-
-```go
-func TestCreateUser(t *testing.T) {
-    pool := common.InitTestDB(t)
-    db, tx := SetupTestDB(t, pool)
-    defer tx.Rollback(context.TODO())
-
-    handler := NewUserHandler(db)
-
-    req := usergen.CreateUserParams{
-        ID:        uuid.New(),
-        Name:      "Test User",
-        Email:     "unit@test.com",
-        CreatedAt: time.Now(),
-    }
-
-    user, err := handler.db.CreateUser(context.Background(), req)
-    require.NoError(t, err)
-    require.Equal(t, req.Email, user.Email)
-    require.NotZero(t, user.ID)
-}
-```
-
-## Interacting with the API using grpcurl
-
-Start the server with `make run`. The server listens on `localhost:9090` without TLS, so every command uses `-plaintext`.
-
-### Discover services
-
-The Makefile targets call grpcurl without `-proto` flags, which relies on server reflection. With reflection available, you can explore the API directly:
-
-```bash
-grpcurl -plaintext localhost:9090 list
-grpcurl -plaintext localhost:9090 describe proto.users.v1.UserService
-```
-
-If reflection is unavailable, point grpcurl at the contract instead:
-
-```bash
-grpcurl -plaintext -import-path . -proto proto/users/v1/users.proto \
-  localhost:9090 list
-```
-
-### Create and fetch a user
-
-```bash
-grpcurl -plaintext \
-  -d '{"email":"alice@buddy.me","name":"Alice"}' \
-  localhost:9090 proto.users.v1.UserService/CreateUser
-```
-
-```json
-{
-  "user": {
-    "id": "c6f0efcd-7d10-49fd-abc2-0812dcf1c8aa",
-    "name": "Alice",
-    "email": "alice@buddy.me",
-    "createdAt": "2025-05-14T12:34:56Z"
-  }
-}
-```
-
-```bash
-grpcurl -plaintext \
-  -d '{"id":"c6f0efcd-7d10-49fd-abc2-0812dcf1c8aa"}' \
-  localhost:9090 proto.users.v1.UserService/GetUser
-```
-
-### List users
-
-```bash
-grpcurl -plaintext -d '{"page":1,"page_size":20}' \
-  localhost:9090 proto.users.v1.UserService/ListUsers
-```
-
-All users are returned today, regardless of the pagination fields.
-
-### Fetch a roadmap or checkpoint
-
-```bash
-grpcurl -plaintext \
-  -d '{"roadmap_id":"<roadmap-uuid>"}' \
-  localhost:9090 proto.roadmaps.v1.RoadmapService/GetRoadmap
-
-grpcurl -plaintext \
-  -d '{"checkpoint_id":"<checkpoint-uuid>"}' \
-  localhost:9090 proto.checkpoints.v1.CheckpointService/GetCheckpoint
-```
-
-### Scripted smoke tests
-
-The Makefile looks up real IDs with `psql` and calls the API for you, so you do not need to copy UUIDs by hand:
+In a second terminal, say hello:
 
 ```bash
 make first-user
-make fetch-all-roadmaps
-make fetch-all-checkpoints
 ```
 
-The `fetch-all-*` targets skip any value that is not a valid 36-character UUID and print a warning. Run them before pushing proto or handler changes as a quick contract check.
+You should get a user back as JSON. `.env` is git-ignored, so your credentials stay local. Set `PORT` if you'd rather not use 9090.
 
-## Database and migrations
+## How it's built
 
-### Schema sources
-
-The schema is defined in two places that must stay in sync:
-
-| Location | Used by | Purpose |
-| --- | --- | --- |
-| `migrations/` | golang-migrate | Applies schema changes to real databases |
-| `internal/db/<module>/*_schema.sql` | sqlc | Lets sqlc type-check queries and generate Go code |
-
-sqlc does not apply migrations. It reads the `*_schema.sql` files only to generate code, so update both whenever the schema changes.
-
-### sqlc configuration
-
-`sqlc.yaml` (version 2) defines one PostgreSQL target per module, each generating code with the `pgx/v5` package and JSON tags:
-
-| Module | Generated package | Output directory |
-| --- | --- | --- |
-| Users | `usergen` | `internal/db/users/user_generated` |
-| Roadmaps | `roadmapgen` | `internal/db/roadmaps/roadmap_generated` |
-| Checkpoints | `checkpointgen` | `internal/db/checkpoints/checkpoint_generated` |
-
-Type overrides map `uuid` to `github.com/google/uuid.UUID` and timestamp columns to `time.Time`. Run `sqlc generate` after any change to a schema or query file.
-
-### Users table
-
-```sql
-CREATE TABLE users (
-  id UUID PRIMARY KEY,
-  name TEXT,
-  email TEXT,
-  created_at TIMESTAMP DEFAULT now()
-);
+```mermaid
+flowchart LR
+    C["gRPC client<br/>grpcurl, services"] -->|"Protobuf"| S["gRPC server<br/>cmd/server"]
+    S --> H["Handlers<br/>validate, map, respond"]
+    H --> Q["sqlc queries<br/>typed Go"]
+    Q --> P["pgx pool"]
+    P --> D[("PostgreSQL")]
 ```
 
-| Column | Purpose |
-| --- | --- |
-| `id` | UUID generated at creation. Primary key |
-| `name` | Display name, validated in the handler |
-| `email` | Primary external identity link, required and validated |
-| `created_at` | Server-generated timestamp for ordering and audit trails |
+Every module follows the same path: **proto, handler, sqlc, database**. A request comes in as a Protobuf message, the handler validates it and parses IDs, a generated query does the SQL, and the handler maps the row back to a Protobuf response. Handlers contain no SQL, and generated code contains no business rules, so once you've read one module you've read them all.
 
-### Running migrations
+A few choices worth calling out:
+
+- **Contract first.** The `.proto` files under `proto/<module>/v1` are the source of truth. `buf` lints them and generates the Go code, which is committed so a fresh clone builds right away.
+- **Typed SQL, no ORM.** Queries live in plain `.sql` files and sqlc compiles them to Go. A broken query fails at generate time, not in production.
+- **The database guards its own data.** Emails are unique, and checkpoint `type` and `status` are protected by `CHECK` constraints. The handlers translate between Protobuf enums and those database values.
+- **Response envelopes.** Every RPC returns a wrapper message such as `GetUserResponse`, so fields can be added later without breaking clients.
+- **Reflection is on.** `grpcurl` can discover services without the `.proto` files.
+- **Sensible pooling.** The server uses a `pgx` pool capped at 10 connections.
+
+## API reference
+
+The server registers three services. Fully qualified method names look like `proto.users.v1.UserService/GetUser`.
+
+| Module | Service | RPCs |
+| --- | --- | --- |
+| Users | `proto.users.v1.UserService` | `CreateUser`, `GetUser`, `ListUsers` |
+| Roadmaps | `proto.roadmaps.v1.RoadmapService` | `CreateRoadmap`, `GetRoadmap`, `ListRoadmaps`, `UpdateRoadmap`, `DeleteRoadmap` |
+| Checkpoints | `proto.checkpoints.v1.CheckpointService` | `CreateCheckpoint`, `GetCheckpoint`, `ListCheckpoints`, `UpdateCheckpoint`, `DeleteCheckpoint`, `ListUserCheckpoints` |
+
+IDs are UUID strings, timestamps are `google.protobuf.Timestamp`, and `grpcurl` shows field names in camelCase (`createdAt`).
+
+### Users
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `id` | string (UUID) | Generated on create |
+| `name` | string | Required |
+| `email` | string | Required and unique |
+| `created_at` | Timestamp | Set on create |
+
+`CreateUser` takes `email` and `name`. It also accepts a `handle`, which is reserved for a future username and currently ignored. `ListUsers` accepts `page` and `page_size`, but returns everyone for now. `UpdateUser` and `DeleteUser` are planned for Phase 2, once account recovery and data retention are settled.
+
+### Roadmaps
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `id` | string (UUID) | Generated on create |
+| `user_id` | string (UUID) | The owner. Required on create |
+| `title` | string | Required |
+| `description` | string | |
+| `is_public` | bool | Defaults to false |
+| `category` | string | |
+| `tags` | repeated string | |
+| `difficulty` | string | |
+| `created_at` | Timestamp | |
+
+`GetRoadmap` and `DeleteRoadmap` take `roadmap_id`. `ListRoadmaps` returns every roadmap, or one user's roadmaps when you pass `user_id`. `UpdateRoadmap` replaces all editable fields, so send the complete set.
+
+### Checkpoints
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `checkpoint_id` | string (UUID) | Generated on create |
+| `roadmap_id` | string (UUID) | The roadmap this belongs to |
+| `title` | string | Required |
+| `description` | string | |
+| `position` | int32 | Order within the roadmap |
+| `type` | enum | `CHECKPOINT_TYPE_TYPE_LEARNING`, `_PRACTICE` or `_ASSESSMENT` |
+| `status` | enum | `CHECKPOINT_STATUS_STATUS_PENDING`, `_IN_PROGRESS` or `_COMPLETED` |
+| `estimated_time` | int32 | The seed data uses minutes |
+| `reward_points` | int32 | |
+| `created_at` | Timestamp | |
+
+`ListCheckpoints` takes a `roadmap_id` and returns checkpoints ordered by `position`. `ListUserCheckpoints` takes a `user_id`, with optional `roadmap_id` and `status` filters, and is part of the upcoming progress model (see [Status](#status-and-known-issues)).
+
+### Errors
+
+Roadmap and checkpoint handlers answer with standard gRPC codes: `InvalidArgument` for malformed IDs or enums, `NotFound` when a roadmap or checkpoint doesn't exist, and `Internal` for most database failures. `CreateUser` returns `InvalidArgument` when `name` or `email` is missing.
+
+### Try it with grpcurl
+
+The server speaks plaintext locally, so every command uses `-plaintext`.
 
 ```bash
-make migrate-up         # apply all pending migrations (POSTGRES_DSN)
-make migrate-down       # revert migrations (POSTGRES_DSN)
-make migrate-test-up    # apply all pending migrations (POSTGRES_TEST_DSN)
-make migrate-test-down  # revert migrations (POSTGRES_TEST_DSN)
+# What's on offer?
+grpcurl -plaintext localhost:9090 list
+grpcurl -plaintext localhost:9090 describe proto.roadmaps.v1.RoadmapService
+
+# Create a user
+grpcurl -plaintext -d '{"email":"alice@buddy.me","name":"Alice"}' \
+  localhost:9090 proto.users.v1.UserService/CreateUser
+
+# Create a roadmap for that user
+grpcurl -plaintext -d '{
+  "user_id": "<user-uuid>",
+  "title": "Backend Bootcamp",
+  "description": "Learn Go, PostgreSQL and APIs",
+  "is_public": true
+}' localhost:9090 proto.roadmaps.v1.RoadmapService/CreateRoadmap
+
+# Add a checkpoint to it
+grpcurl -plaintext -d '{
+  "roadmap_id": "<roadmap-uuid>",
+  "title": "Hello, Go",
+  "description": "Write your first Go program",
+  "position": 1,
+  "type": "CHECKPOINT_TYPE_TYPE_LEARNING",
+  "status": "CHECKPOINT_STATUS_STATUS_PENDING",
+  "estimated_time": 25,
+  "reward_points": 10
+}' localhost:9090 proto.checkpoints.v1.CheckpointService/CreateCheckpoint
 ```
 
-These targets wrap `migrate -path migrations -database "$POSTGRES_DSN" up|down`. Treat `migrate-down` as destructive and avoid running it against any database that holds data you need.
-
-### Creating a migration
-
-Follow the numbering convention of the existing files in `migrations/`. With golang-migrate, a sequential pair of files is created like this:
+Prefer not to copy UUIDs around? The Makefile looks up real IDs for you:
 
 ```bash
-migrate create -ext sql -dir migrations -seq <short_description>
+make first-user          # also: first-roadmap, first-checkpoint
+make fetch-all-users     # also: fetch-all-roadmaps, fetch-all-checkpoints
 ```
 
-Write both the `up` and `down` statements, apply them with `make migrate-up` and `make migrate-test-up`, then update the matching `*_schema.sql` and run `sqlc generate`.
+## Data model
 
-### Seed data
+Three migrations in `migrations/`, each with an `up` and a `down` file, create the tables.
 
-`make db-seed` runs, in order, `seed/users.sql`, `seed/roadmap.sql`, and `seed/checkpoints.sql`. The order matters because checkpoints belong to roadmaps. Seed data is for development only.
-
-## Project status
-
-**Phase 1 (Backend Foundations) is complete.**
-
-| Deliverable | Status |
+| Table | Highlights |
 | --- | --- |
-| Users via gRPC (create, get, list) | Done |
-| Roadmaps via gRPC (create, get, list, delete) | Done |
-| Checkpoints via gRPC (create, get, list, delete) | Done |
-| `pgx.Tx` test coverage | Done |
-| grpcurl interface tests | Done |
-| Logging and migrations | Done |
-| Structured Makefile | Done |
-| Phase 1 documentation | Done |
+| `users` | UUID primary key, `name` required, `email` required and unique |
+| `roadmaps` | Owned by a `user_id`, with `is_public`, `category`, `tags` (text array) and `difficulty` |
+| `checkpoints` | Belongs to a `roadmap_id`, ordered by `position`, with `CHECK`-constrained `type` and `status` |
 
-### Planned for Phase 2
+Each module also keeps a `*_schema.sql` file under `internal/db/<module>/`. sqlc reads those to generate code, while golang-migrate applies the files in `migrations/` to real databases. Think of the migrations as the truth for your database and the schema files as the truth for the generated Go. When you change one, change the other and run `sqlc generate`.
 
-- `UpdateUser` and `DeleteUser`, including account recovery, soft deletion, and data retention policy.
-- An events module that records activity such as completed checkpoints, consumed by RHIA.
-- Pagination for list endpoints.
-- Module documentation for roadmaps and checkpoints, an entity-relationship diagram, and flow diagrams.
+Foreign keys between tables are not enforced yet. That arrives with the progress model.
 
-### Scope and limitations
+## Testing
 
-- The server listens without TLS, and no authentication or authorization layer is documented. Run it locally or inside a trusted network boundary.
-- "Admin-only" behavior for roadmaps and checkpoints is a design requirement. Access control is not yet part of the documented scope.
+Tests run against a real PostgreSQL database, not mocks. Each test opens a `pgx` transaction and rolls it back at the end, so tests never leave anything behind and never trip over each other.
 
-## Further documentation
+```bash
+make migrate-test-up   # once, to prepare the test database
+make test              # everything under ./tests/...
+make test-users        # or test-roadmaps / test-checkpoints
+```
 
-- [Users module deep dive](docs/users/README.md): schema, protobuf API, sqlc mapping, handler logic, tests, and request flow.
+There are nine tests, three per module (create, get, list), and the setup helpers use timeout contexts so a stuck connection fails fast. They currently exercise the generated query layer directly. Handler-level tests are the next addition.
+
+To see how much code the tests touch, point coverage at the application packages, because the tests live in their own directory:
+
+```bash
+go test -coverpkg=./internal/...,./cmd/... -cover ./tests/...
+```
+
+## Working on the code
+
+A typical change flows from the outside in:
+
+1. **Contract:** edit `proto/<module>/v1/*.proto`, then run `buf lint && buf generate`.
+2. **Schema:** add a migration with `migrate create -ext sql -dir migrations -seq <name>`, write both `up` and `down`, and update the matching `*_schema.sql`.
+3. **Queries:** edit `internal/db/<module>/*_query.sql` and run `sqlc generate`.
+4. **Handler:** validate input, call the generated method, map the result to Protobuf.
+5. **Tests:** add one under `tests/<module>/` and run `make test`.
+
+Generated code is committed, so include it in the same commit as the change that produced it. To reproduce the committed output exactly, use the tool versions recorded in the generated files:
+
+```bash
+go install github.com/sqlc-dev/sqlc/cmd/sqlc@v1.29.0
+go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.36.6
+go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.5.1
+go install github.com/bufbuild/buf/cmd/buf@latest
+```
+
+CI (`.github/workflows/backend.yaml`) runs three stages on every push that touches Go, proto or SQL files: lint (`sqlc generate`, `buf lint`, `buf generate`), build (`go build ./...`) and test (`go test ./...`).
+
+## Project layout
+
+```text
+cmd/server/          Entry point: connects to Postgres, registers services and reflection
+internal/handlers/   gRPC handlers: users/, roadmap/, checkpoints/
+internal/db/         sqlc schema, queries and generated code, one folder per module
+internal/logging/    zerolog console setup
+internal/services/   Reserved for business logic (empty for now)
+proto/               Protobuf contracts (v1)
+gen/go/proto/        Generated Go code (committed)
+migrations/          golang-migrate files, 000001 to 000003
+seed/                Sample data for local development
+tests/               users/, roadmap/, checkpoints/, plus shared helpers in common/
+utils/               UUID parsing and enum mapping
+docs/users/          A deep dive into the Users module
+```
+
+## Status and known issues
+
+Phase 1, *Backend Foundations*, delivers the core data layer. Here is where things stand.
+
+| Area | Status |
+| --- | --- |
+| Users: create, get, list | ✅ Working |
+| Roadmaps: create, list all, update, delete | ✅ Working |
+| Checkpoints: create, get, list by roadmap, update, delete | ✅ Working |
+| Migrations, seed data, grpcurl smoke tests | ✅ Working |
+| Per-user roadmap and checkpoint listing | 🚧 In progress |
+| Progress model and events for RHIA | 🚧 Planned for Phase 2 |
+
+Known issues, in rough priority order:
+
+- **Per-user checkpoints.** `ListUserCheckpoints` needs a `user_checkpoints` table, and there's no migration for it yet, so the call returns an error until the progress model lands.
+- **Roadmap details.** Roadmap responses don't yet include `category`, `tags` or `difficulty`, and `GetRoadmap` returns a reduced record. Listing roadmaps by `user_id` also needs a fix.
+- **List filters.** `ListUsers` ignores pagination, and `ListRoadmaps` only honors `user_id`.
+- **Security.** There is no authentication or TLS yet, so run the server locally or on a trusted network.
+- **Seed data.** Seeded checkpoints aren't attached to the seeded roadmaps yet.
+- **Test coverage.** Tests don't cover the handlers yet, and the CI test job doesn't provision PostgreSQL.
+
+Coming in Phase 2: `UpdateUser` and `DeleteUser`, pagination, progress tracking and an events module for RHIA, foreign keys, and module docs for roadmaps and checkpoints.
+
+## Learn more
+
+- [Users module deep dive](docs/users/README.md)
+- [Buddy.me: what, why and how](https://rayvah.cc/posts/buddy-me-intro-what-why-how)
+- [Rabbit-Hole Inference Algorithm (RHIA)](https://rayvah.cc/posts/rabbit-hole-interface-system)
 
 ## License
 
-This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
+MIT. See [LICENSE](LICENSE).
